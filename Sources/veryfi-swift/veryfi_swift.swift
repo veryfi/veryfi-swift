@@ -1,14 +1,7 @@
-//
-//  main.swift
-//  veryfi-swift
-//
-//  Created by Matt Eng on 7/27/21.
-//
-
 import Foundation
 
 public class Client {
-
+    
     let client_id : String
     let client_secret : String
     let username : String
@@ -31,29 +24,29 @@ public class Client {
         self.api_key = api_key
         self.headers = [:]
         self.CATEGORIES = [
-                "Advertising & Marketing",
-                "Automotive",
-                "Bank Charges & Fees",
-                "Legal & Professional Services",
-                "Insurance",
-                "Meals & Entertainment",
-                "Office Supplies & Software",
-                "Taxes & Licenses",
-                "Travel",
-                "Rent & Lease",
-                "Repairs & Maintenance",
-                "Payroll",
-                "Utilities",
-                "Job Supplies",
-                "Grocery",
-            ]
+            "Advertising & Marketing",
+            "Automotive",
+            "Bank Charges & Fees",
+            "Legal & Professional Services",
+            "Insurance",
+            "Meals & Entertainment",
+            "Office Supplies & Software",
+            "Taxes & Licenses",
+            "Travel",
+            "Rent & Lease",
+            "Repairs & Maintenance",
+            "Payroll",
+            "Utilities",
+            "Job Supplies",
+            "Grocery",
+        ]
     }
     
     /**
-    Prepares the headers needed for a request.
-    :param has_files: Are there any files to be submitted as binary
-    :return: Dictionary with headers
-    */
+     Prepares the headers needed for a request.
+     :param has_files: Are there any files to be submitted as binary
+     :return: Dictionary with headers
+     */
     private func _get_headers() -> [String:String] {
         let final_headers = [
             "User-Agent": "Python Veryfi-Swift/0.0.1",
@@ -66,11 +59,11 @@ public class Client {
     }
     
     /**
-    Get API Base URL with API Version
-    :return: Base URL to Veryfi API
+     Get API Base URL with API Version
+     :return: Base URL to Veryfi API
      */
     private func _get_url() -> String {
-          return self.base_url + self.api_version
+        return self.base_url + self.api_version
     }
     
     /*
@@ -82,15 +75,15 @@ public class Client {
      */
     public func get_documents(withCompletion completion: @escaping (Data?, Error?) -> Void) {
         //(http_verb: String, endpoint_name: String, request_arguments: [String:String]){
-
+        
         let headers = self._get_headers()
         let api_url = "\(self._get_url())/partner/documents/"
         let url = URL(string: api_url)!
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
-//        request.httpBody = ["":]
+        //        request.httpBody = ["":]
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             guard error == nil else {
                 print("Error: error calling request")
@@ -150,7 +143,7 @@ public class Client {
         let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
         var components: URLComponents = URLComponents(string: api_url)!
         components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
-
+        
         var request: URLRequest = URLRequest(url: components.url!)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
@@ -186,7 +179,7 @@ public class Client {
     private func _getFile(fileName: String) -> [UInt8]? {
         // See if the file exists.
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                let fileURL = dir.appendingPathComponent(fileName)
+            let fileURL = dir.appendingPathComponent(fileName)
             do {
                 // Get the raw data from the file.
                 let rawData: Data = try Data(contentsOf: fileURL)
@@ -229,14 +222,14 @@ public class Client {
         // Set Content-Type Header to multipart/form-data, this is equivalent to submitting form data with file upload in a web browser
         // And the boundary is also set here
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-
+        
         // Add the file data to the raw http request data
-    //    data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-    //    data.append("Content-Disposition: form-data; name=\"name\"; username=\"kemal\"\r\n".data(using: .utf8)!)
+        //    data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        //    data.append("Content-Disposition: form-data; name=\"name\"; username=\"kemal\"\r\n".data(using: .utf8)!)
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
         data.append("Content-Disposition: form-data; name=\"file\"; filename=\"recieved\(fileExtension)\"\r\n".data(using: .utf8)!)
         data.append("Content-Type: \"content-type header\"\r\n\r\n".data(using: .utf8)!)
-
+        
         print("opening file...")
         if let bytes: [UInt8] = _getFile(fileName: file_name) {
             for byte in bytes {
@@ -246,7 +239,7 @@ public class Client {
         
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
         let json: [String:Any] = ["file_name": file_name,
-//            "file_data": base64_encoded_string,
+                                  //            "file_data": base64_encoded_string,
                                   "categories": self.CATEGORIES,
                                   "auto_delete": delete_after_processing
         ]
@@ -284,7 +277,7 @@ public class Client {
         let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
         var components: URLComponents = URLComponents(string: api_url)!
         components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
-
+        
         var request: URLRequest = URLRequest(url: components.url!)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
@@ -312,42 +305,42 @@ public class Client {
                 return
             }
         }).resume()
-//        let headers: [String:String] = self._get_headers()
-////        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
-//        let api_url: String = "\(self._get_url())/partner/documents/"
-//        let url: URL = URL(string: api_url)!
-//
-//        var request: URLRequest = URLRequest(url: url)
-//        request.httpMethod = "GET"
-//        request.allHTTPHeaderFields = headers
-////        let jsonData = try? JSONSerialization.data(withJSONObject: params)
-////        request.httpBody = jsonData
-//        print("START TASK")
-//        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-//            if self.check_err(data: data, response: response, error: error){ return}
-//
-//            do {
-//                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
-//                    print("Error: Cannot convert data to JSON object")
-//                    return
-//                }
-//                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-//                    print("Error: Cannot convert JSON object to Pretty JSON data")
-//                    return
-//                }
-//                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-//                    print("Error: Couldn't print JSON in String")
-//                    return
-//                }
-//
-//                print(prettyPrintedJson)
-//                completion(prettyJsonData, nil)
-//            } catch {
-//                print("Error: Trying to convert JSON data to string")
-//                return
-//            }
-//        }).resume()
-//        print("END FUNC")
+        //        let headers: [String:String] = self._get_headers()
+        ////        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
+        //        let api_url: String = "\(self._get_url())/partner/documents/"
+        //        let url: URL = URL(string: api_url)!
+        //
+        //        var request: URLRequest = URLRequest(url: url)
+        //        request.httpMethod = "GET"
+        //        request.allHTTPHeaderFields = headers
+        ////        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        ////        request.httpBody = jsonData
+        //        print("START TASK")
+        //        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+        //            if self.check_err(data: data, response: response, error: error){ return}
+        //
+        //            do {
+        //                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
+        //                    print("Error: Cannot convert data to JSON object")
+        //                    return
+        //                }
+        //                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
+        //                    print("Error: Cannot convert JSON object to Pretty JSON data")
+        //                    return
+        //                }
+        //                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
+        //                    print("Error: Couldn't print JSON in String")
+        //                    return
+        //                }
+        //
+        //                print(prettyPrintedJson)
+        //                completion(prettyJsonData, nil)
+        //            } catch {
+        //                print("Error: Trying to convert JSON data to string")
+        //                return
+        //            }
+        //        }).resume()
+        //        print("END FUNC")
     }
     
     /**
@@ -358,7 +351,7 @@ public class Client {
         let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
         var components: URLComponents = URLComponents(string: api_url)!
         components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
-
+        
         var request: URLRequest = URLRequest(url: components.url!)
         request.httpMethod = "DELETE"
         request.allHTTPHeaderFields = headers
@@ -411,7 +404,7 @@ public class Client {
 //        let base64_signature = base64.b64encode(tmp_signature).decode("utf-8").strip()
 //        return base64_signature
 //    }
-    
+
 //    /*
 //     Submit the HTTP request.
 //     :param http_verb: HTTP Method
