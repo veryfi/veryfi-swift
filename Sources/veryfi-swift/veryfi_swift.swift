@@ -2,26 +2,26 @@ import Foundation
 
 public class Client {
     
-    let client_id : String
-    let client_secret : String
+    let clientId : String
+    let clientSecret : String
     let username : String
-    let api_key : String
-    let base_url = "https://api.veryfi.com/api/"
-    let api_version = "v7"
+    let apiKey : String
+    let baseUrl = "https://api.veryfi.com/api/"
+    let apiVersion = "v7"
     let timeout = 120
     var headers : [String:String]
     let session = URLSession.shared
     let CATEGORIES: [String]
     
-    public init(client_id : String,
-                client_secret : String,
+    public init(clientId : String,
+                clientSecret : String,
                 username : String,
-                api_key : String
+                apiKey : String
     ) {
-        self.client_id = client_id
-        self.client_secret = client_secret
+        self.clientId = clientId
+        self.clientSecret = clientSecret
         self.username = username
-        self.api_key = api_key
+        self.apiKey = apiKey
         self.headers = [:]
         self.CATEGORIES = [
             "Advertising & Marketing",
@@ -47,23 +47,23 @@ public class Client {
      :param has_files: Are there any files to be submitted as binary
      :return: Dictionary with headers
      */
-    private func _get_headers() -> [String:String] {
-        let final_headers = [
+    private func getHeaders() -> [String:String] {
+        let headers = [
             "User-Agent": "Python Veryfi-Swift/0.0.1",
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "Client-Id": self.client_id,
-            "Authorization": "apikey \(self.username):\(self.api_key)"
+            "Client-Id": self.clientId,
+            "Authorization": "apikey \(self.username):\(self.apiKey)"
         ]
-        return final_headers
+        return headers
     }
     
     /**
      Get API Base URL with API Version
      :return: Base URL to Veryfi API
      */
-    private func _get_url() -> String {
-        return self.base_url + self.api_version
+    private func getUrl() -> String {
+        return self.baseUrl + self.apiVersion
     }
     
     /*
@@ -73,11 +73,11 @@ public class Client {
      :param request_arguments: JSON payload to send to Veryfi
      :return: A JSON of the response data.
      */
-    public func get_documents(withCompletion completion: @escaping (Data?, Error?) -> Void) {
+    public func getDocuments(withCompletion completion: @escaping (Data?, Error?) -> Void) {
         //(http_verb: String, endpoint_name: String, request_arguments: [String:String]){
         
-        let headers = self._get_headers()
-        let api_url = "\(self._get_url())/partner/documents/"
+        let headers = self.getHeaders()
+        let api_url = "\(self.getUrl())/partner/documents/"
         let url = URL(string: api_url)!
         
         var request = URLRequest(url: url)
@@ -138,11 +138,11 @@ public class Client {
     /**
      Request to get a single document by ID
      */
-    public func get_document(doc_id: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
-        let headers: [String:String] = self._get_headers()
-        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
+    public func getDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
+        let headers: [String:String] = self.getHeaders()
+        let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
         var components: URLComponents = URLComponents(string: api_url)!
-        components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
+        components.queryItems = [URLQueryItem(name: "id", value: documentId)]
         
         var request: URLRequest = URLRequest(url: components.url!)
         request.httpMethod = "GET"
@@ -176,7 +176,7 @@ public class Client {
     /**
      Get a file from iOS
      */
-    private func _getFile(fileName: String) -> [UInt8]? {
+    private func getFile(fileName: String) -> [UInt8]? {
         // See if the file exists.
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let fileURL = dir.appendingPathComponent(fileName)
@@ -198,14 +198,14 @@ public class Client {
     /**
      Upload a file from iOS
      */
-    public func process_document(doc_id: String,
-                                 file_name: String,
+    public func processDocument(documentId: String,
+                                 fileName: String,
                                  categories: [String] = [], //Fix categories default
-                                 delete_after_processing: Bool = false,
+                                 deleteAfterProcessing: Bool = false,
                                  withCompletion completion: @escaping (Data?, Error?) -> Void) {
-        let headers: [String:String] = self._get_headers()
-        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
-        let url: URL = URL(string: api_url)!
+        let headers: [String:String] = self.getHeaders()
+        let apiUrl: String = "\(self.getUrl())/partner/documents/\(documentId)/"
+        let url: URL = URL(string: apiUrl)!
         
         
         var request: URLRequest = URLRequest(url: url)
@@ -231,17 +231,17 @@ public class Client {
         data.append("Content-Type: \"content-type header\"\r\n\r\n".data(using: .utf8)!)
         
         print("opening file...")
-        if let bytes: [UInt8] = _getFile(fileName: file_name) {
+        if let bytes: [UInt8] = getFile(fileName: fileName) {
             for byte in bytes {
                 data.append(byte)
             }
         }
         
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        let json: [String:Any] = ["file_name": file_name,
+        let json: [String:Any] = ["file_name": fileName,
                                   //            "file_data": base64_encoded_string,
                                   "categories": self.CATEGORIES,
-                                  "auto_delete": delete_after_processing
+                                  "auto_delete": deleteAfterProcessing
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: json)
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
@@ -272,9 +272,9 @@ public class Client {
      Update a document using ID and passing parameters
      Works but returns no output
      */
-    public func update_document(doc_id: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
-        let headers: [String:String] = self._get_headers()
-        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
+    public func updateDocument(doc_id: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
+        let headers: [String:String] = self.getHeaders()
+        let api_url: String = "\(self.getUrl())/partner/documents/\(doc_id)/"
         var components: URLComponents = URLComponents(string: api_url)!
         components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
         
@@ -346,11 +346,11 @@ public class Client {
     /**
      Request to delete a document by ID
      */
-    public func delete_document(doc_id: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
-        let headers: [String:String] = self._get_headers()
-        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
+    public func deleteDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
+        let headers: [String:String] = self.getHeaders()
+        let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
         var components: URLComponents = URLComponents(string: api_url)!
-        components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
+        components.queryItems = [URLQueryItem(name: "id", value: documentId)]
         
         var request: URLRequest = URLRequest(url: components.url!)
         request.httpMethod = "DELETE"

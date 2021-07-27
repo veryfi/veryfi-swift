@@ -13,12 +13,12 @@ let client_id = ""
 let client_secret = ""
 let username = ""
 let api_key = ""
-var my_client: Client  = Client(client_id: "", client_secret: "", username: "", api_key: "")
+var client: Client  = Client(client_id: "", client_secret: "", username: "", api_key: "")
 
 class veryfi_swiftTests: XCTestCase {
 
     override func setUpWithError() throws {
-        my_client = Client(client_id: client_id, client_secret: client_secret, username: username, api_key: api_key)
+        client = Client(client_id: client_id, client_secret: client_secret, username: username, api_key: api_key)
         // Put setup code here. This method is called before the invocation of each test method in the class.
         
     }
@@ -49,7 +49,7 @@ class veryfi_swiftTests: XCTestCase {
     func testGetDocument() throws {
         throw XCTSkip("Skipped.")
 
-        my_client.get_document(doc_id: "37825037", withCompletion: { detail, error in
+        client.getDocument(doc_id: "37825037", withCompletion: { detail, error in
             if error != nil {
                 //handle error
             } else if detail == detail {
@@ -66,7 +66,7 @@ class veryfi_swiftTests: XCTestCase {
     func testTryDocument() throws {
 //        throw XCTSkip("Skipped.")
         
-        my_client.update_document(doc_id: "37825037", withCompletion: { detail, error in //params: ["date":"2016-01-20 00:00:00"], withCompletion: { detail, error in
+        client.updateDocument(doc_id: "37825037", withCompletion: { detail, error in //params: ["date":"2016-01-20 00:00:00"], withCompletion: { detail, error in
             if error != nil {
 //                print(error)
             } else if detail == detail {
