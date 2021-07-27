@@ -272,11 +272,11 @@ public class Client {
      Update a document using ID and passing parameters
      Works but returns no output
      */
-    public func updateDocument(doc_id: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
+    public func updateDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
-        let api_url: String = "\(self.getUrl())/partner/documents/\(doc_id)/"
+        let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
         var components: URLComponents = URLComponents(string: api_url)!
-        components.queryItems = [URLQueryItem(name: "id", value: doc_id)]
+        components.queryItems = [URLQueryItem(name: "id", value: documentId)]
         
         var request: URLRequest = URLRequest(url: components.url!)
         request.httpMethod = "GET"
