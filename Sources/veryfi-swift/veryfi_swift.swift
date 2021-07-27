@@ -77,8 +77,8 @@ public class Client {
         //(http_verb: String, endpoint_name: String, request_arguments: [String:String]){
         
         let headers = self.getHeaders()
-        let api_url = "\(self.getUrl())/partner/documents/"
-        let url = URL(string: api_url)!
+        let apiUrl = "\(self.getUrl())/partner/documents/"
+        let url = URL(string: apiUrl)!
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -140,8 +140,8 @@ public class Client {
      */
     public func getDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
-        let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
-        var components: URLComponents = URLComponents(string: api_url)!
+        let apiUrl: String = "\(self.getUrl())/partner/documents/\(documentId)/"
+        var components: URLComponents = URLComponents(string: apiUrl)!
         components.queryItems = [URLQueryItem(name: "id", value: documentId)]
         
         var request: URLRequest = URLRequest(url: components.url!)
