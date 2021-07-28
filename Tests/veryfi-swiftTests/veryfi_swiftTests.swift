@@ -27,7 +27,7 @@ class veryfi_swiftTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func skip_testExample() throws {
+    func skip_testGetAllDocuments() throws {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let expectation = XCTestExpectation(description: "Get data from update document")
         client.getDocuments(withCompletion: { detail, error in
@@ -67,6 +67,7 @@ class veryfi_swiftTests: XCTestCase {
     
     func skip_testUpdateDocument() throws {
         let expectation = XCTestExpectation(description: "Get data from update document")
+        
         client.updateDocument(documentId: "37825037", params: ["date":"2016-01-20 00:00:00"], withCompletion: { detail, error in
             XCTAssertNotNil(detail, "No data was downloaded.")
             if error != nil {
@@ -85,26 +86,65 @@ class veryfi_swiftTests: XCTestCase {
     }
     
     func skip_testDeleteDocument() throws {
+        let expectation = XCTestExpectation(description: "Delete document")
+        
         client.deleteDocument(documentId: "37825037", withCompletion: { detail, error in
             if error != nil {
-                //handle error
+                print(error)
+                expectation.fulfill()
             } else if detail == detail {
                 //You can use detail here
                 guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
                     print("Error: Couldn't print JSON in String")
                     return
                 }
-//                print(prettyPrintedJson)
+                print(prettyPrintedJson)
+                expectation.fulfill()
             }
         })
+        wait(for: [expectation], timeout: 20.0)
     }
     
-    func skip_testProcessDocument() throws {
+    func testProcessDocument() throws {
+        let expectation = XCTestExpectation(description: "Get data from processing document")
         
+        client.processDocument(fileName: "receipt.png", withCompletion: { detail, error in
+            if error != nil {
+                print(error)
+                expectation.fulfill()
+                return
+            } else if detail != nil {
+                //You can use detail here
+                let prettyPrintedJson = String(data: detail!, encoding: .utf8)!
+                print(prettyPrintedJson)
+                expectation.fulfill()
+                return
+            }
+            print("Error: Couldn't print JSON in String")
+            expectation.fulfill()
+            return
+        })
+        wait(for: [expectation], timeout: 20.0)
     }
     
-    func testProcessDocumentUrl() throws {
+    func skip_testProcessDocumentUrl() throws {
+        let expectation = XCTestExpectation(description: "POST file url and return response")
         
+        client.processDocumentURL(fileUrls: ["https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg"], withCompletion: { detail, error in
+            if error != nil {
+                print("ERROR IN OUTPUT")
+                print(error)
+                expectation.fulfill()
+            } else if detail == detail {
+                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
+                    print("Error: Couldn't print JSON in String")
+                    return
+                }
+                print(prettyPrintedJson)
+                expectation.fulfill()
+            }
+        })
+        wait(for: [expectation], timeout: 20.0)
     }
 
     func testPerformanceExample() throws {

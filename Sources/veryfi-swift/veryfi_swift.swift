@@ -42,11 +42,8 @@ public class Client {
         ]
     }
     
-    /**
-     Prepares the headers needed for a request.
-     :param has_files: Are there any files to be submitted as binary
-     :return: Dictionary with headers
-     */
+    /// Prepares headers needed for request.
+    /// - Returns: Dictionary with headers.
     private func getHeaders() -> [String:String] {
         let headers = [
             "User-Agent": "Python Veryfi-Swift/0.0.1",
@@ -58,24 +55,20 @@ public class Client {
         return headers
     }
     
-    /**
-     Get API Base URL with API Version
-     :return: Base URL to Veryfi API
-     */
+    
+    /// Get URL for requests.
+    /// - Returns: Base URL with API version.
     private func getUrl() -> String {
         return self.baseUrl + self.apiVersion
     }
     
-    /*
-     Submit the GET request to get all documents.
-     :param http_verb: HTTP Method
-     :param endpoint_name: Endpoint name such as 'documents', 'users', etc.
-     :param request_arguments: JSON payload to send to Veryfi
-     :return: A JSON of the response data.
-     */
-    public func getDocuments(withCompletion completion: @escaping (Data?, Error?) -> Void) {
-        //(http_verb: String, endpoint_name: String, request_arguments: [String:String]){
-        
+    
+    /// Get all documents from Veryfi inbox.
+    /// - Parameters:
+    ///   - completion: Block executed after request.
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func getDocuments(withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
         let headers = self.getHeaders()
         let apiUrl = "\(self.getUrl())/partner/documents/"
         let url = URL(string: apiUrl)!
@@ -83,7 +76,6 @@ public class Client {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
-        //        request.httpBody = ["":]
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             guard error == nil else {
                 print("Error: error calling request")
@@ -116,6 +108,12 @@ public class Client {
         }).resume()
     }
     
+    /// Checks for error with response.
+    /// - Parameters:
+    ///   - data: Data from server.
+    ///   - response: Response code from server.
+    ///   - error: Error from server.
+    /// - Returns: True or false for problems with response.
     private func check_err(data: Data?, response: URLResponse?, error: Error?) -> Bool {
         guard error == nil else {
             print("Error: error calling request")
@@ -135,10 +133,13 @@ public class Client {
     }
     
     
-    /**
-     Request to get a single document by ID
-     */
-    public func getDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
+    /// Get single document by ID from Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId:  ID of document to retreive
+    ///   - completion: Block executed after request.
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func getDocument(documentId: String, withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
         let apiUrl: String = "\(self.getUrl())/partner/documents/\(documentId)/"
         var components: URLComponents = URLComponents(string: apiUrl)!
@@ -148,8 +149,8 @@ public class Client {
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { return }
-            
+            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
+
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
                     print("Error: Cannot convert data to JSON object")
@@ -172,35 +173,75 @@ public class Client {
         }).resume()
     }
     
-    /**
-     Get a file from iOS
-     */
+    
+    /// Retrieve and encode file.
+    /// - Parameter fileName: Full name of file.
+    /// - Returns: UInt8 encoded file data.
     private func getFile(fileName: String) -> [UInt8]? {
-        // See if the file exists.
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let fileURL = dir.appendingPathComponent(fileName)
-            do {
-                // Get the raw data from the file.
-                let rawData: Data = try Data(contentsOf: fileURL)
-                // Return the raw data as an array of bytes.
-                return [UInt8](rawData)
-            } catch {
-                // Couldn't read the file.
-                return nil
-            }
+        let testCaseURL = URL(fileURLWithPath: "\(#file)", isDirectory: false)
+        let testsFolderURL = testCaseURL.deletingLastPathComponent()
+//        let resourcesFolderURL = testsFolderURL.deletingLastPathComponent().appendingPathComponent("veryfi-swift", isDirectory: true)
+        let url = testsFolderURL.appendingPathComponent("\(fileName)", isDirectory: false)
+        do {
+            let data = try Data(contentsOf: url)
+            return [UInt8](data)
+        } catch {
+            print("Not found")
+            return nil
         }
-        print("\(fileName) not exist")
-        return nil
+//        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+//            let fileURL = dir.appendingPathComponent(fileName)
+//            do {
+//                // Get the raw data from the file.
+////                let rawData: Data = try Data(contentsOf: fileURL)
+//                let stream = InputStream(url: fileURL)!
+//                stream.open()
+//                defer {
+//                    stream.close()
+//                }
+//                var rawData = Data()
+//                let bufferSize = 1024
+//                let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+//                defer {
+//                    buffer.deallocate()
+//                }
+//                print(stream.hasBytesAvailable)
+//                while stream.hasBytesAvailable {
+//                    let read = stream.read(buffer, maxLength: bufferSize)
+//                    if read < 0 {
+//                        throw InputStream().streamError!
+//                    } else if read == 0 {
+//                        break
+//                    }
+//                    rawData.append(buffer, count:read)
+//                }
+//                // Return the raw data as an array of bytes.
+//                return [UInt8](rawData)
+//            } catch {
+//                print("Couldn't read the file.")
+//                return nil
+//            }
+//        }
+//        print("\(fileName) not exist")
+//        return nil
     }
     
     
-    /**
-     Upload a file from iOS
-     */
+    /// Upload a file for the Veryfi API to process.
+    ///
+    /// - Parameters:
+    ///     - fileName: Name of the file to upload to the Veryfi API.
+    ///     - categories: List of document categories.
+    ///     - deleteAfterProcessing: Do not store file in Veryfi's inbox.
+    ///     - params: Additional parameters.
+    ///     - completion: Function called after request completes.
+    ///     -  detail: Response from server.
+    ///     -  error: Error from server.
     public func processDocument(fileName: String,
-                                 categories: [String] = [], //Fix categories default
+                                 categories: [String]? = nil,
                                  deleteAfterProcessing: Bool = false,
-                                 withCompletion completion: @escaping (Data?, Error?) -> Void) {
+                                 params: [String: Any]? = nil,
+                                 withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
         let apiUrl: String = "\(self.getUrl())/partner/documents/"
         let url: URL = URL(string: apiUrl)!
@@ -215,64 +256,85 @@ public class Client {
         
         // generate boundary string using a unique per-app string
         let boundary = UUID().uuidString
-        let fileExtension = fileName.components(separatedBy: ".").last! //Throw error if incorrect file name
         
         // Set Content-Type Header to multipart/form-data, this is equivalent to submitting form data with file upload in a web browser
         // And the boundary is also set here
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
         // Add the file data to the raw http request data
-        //    data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-        //    data.append("Content-Disposition: form-data; name=\"name\"; username=\"kemal\"\r\n".data(using: .utf8)!)
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"recieved\(fileExtension)\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: \"content-type header\"\r\n\r\n".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+        data.append("Content-Type: \"image/png\"\r\n\r\n".data(using: .utf8)!)
         
-        print("opening file...")
         if let bytes: [UInt8] = getFile(fileName: fileName) {
             for byte in bytes {
                 data.append(byte)
             }
+        } else {
+            print("Did not work")
+            completion(nil,nil)
         }
         
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
         
-//        let json: [String:Any] = ["file_name": fileName,
-//                                  "file_data": data,
-//                                  "categories": self.CATEGORIES,
-//                                  "auto_delete": deleteAfterProcessing]
-//
-//        request.httpBody = try? JSONSerialization.data(withJSONObject: json)
+        //Add other params
+        data.append("Content-Disposition: form-data; name=\"file_name\"\r\n".data(using: .utf8)!)
+        data.append("\r\n\"receipt.png\"".data(using: .utf8)!)
+        data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        //
         
-        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { return }
-            
+        let params: [String:Any] = ["categories": self.CATEGORIES,
+                                  "auto_delete": deleteAfterProcessing]
+//        for (key,value) in params {
+//            data.append("Content-Disposition: form-data; name=\"\(key)\";\r\n".data(using: .utf8)!)
+//            data.append("\"\(value)\"".data(using: .utf8)!)
+//            data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+//        }
+        print(String(decoding:data, as: UTF8.self))
+        session.uploadTask(with: request, from: data, completionHandler: { data, response, error -> Void in
+            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
+
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
                     print("Error: Cannot convert data to JSON object")
+                    completion(data,error)
                     return
                 }
                 guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
                     print("Error: Cannot convert JSON object to Pretty JSON data")
+                    completion(data,error)
                     return
                 }
                 
                 completion(prettyJsonData, nil)
             } catch {
                 print("Error: Trying to convert JSON data to string")
+                completion(data,error)
                 return
             }
         }).resume()
     }
     
-    public func processDocumentURL(fileUrl: String?,
-                                   fileUrls: [String]?,
-                                   categories: [String] = [], //Fix categories default
+    /// Upload document to Veryfi API with URL.
+    /// - Parameters:
+    ///   - fileUrl: Publicly available URL.
+    ///   - fileUrls: List of publicly available URLs.
+    ///   - categories: List of document categories.
+    ///   - deleteAfterProcessing: Do not store file in Veryfi's inbox.
+    ///   - boostMode: Skip data enrichment but process document faster.
+    ///   - externalId: Existing ID to assign to document.
+    ///   - maxPagesToProcess: Number of pages to process.
+    ///   - completion: Block executed after request.
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func processDocumentURL(fileUrl: String? = nil,
+                                   fileUrls: [String]? = nil,
+                                   categories: [String]? = nil, //Fix categories default
                                    deleteAfterProcessing: Bool = false,
                                    boostMode: Int = 0,
-                                   externalId: String?,
-                                   maxPagesToProcess: Int?,
-                                   withCompletion completion: @escaping (Data?, Error?) -> Void) {
+                                   externalId: String? = nil,
+                                   maxPagesToProcess: Int? = 1,
+                                   withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
         let apiUrl: String = "\(self.getUrl())/partner/documents/"
         let url: URL = URL(string: apiUrl)!
@@ -290,8 +352,8 @@ public class Client {
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         request.httpBody = jsonData
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { return }
-            
+            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
+
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
                     print("Error: Cannot convert data to JSON object")
@@ -310,11 +372,15 @@ public class Client {
         }).resume()
     }
     
-    /**
-     Update a document using ID and passing parameters
-     Works but returns no output
-     */
-    public func updateDocument(documentId: String, params: [String: Any], withCompletion completion: @escaping (Data?, Error?) -> Void) {
+    
+    /// Update information of document in Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId: ID of document to modify.
+    ///   - params: Names and values to modify.
+    ///   - completion: A block to execute
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func updateDocument(documentId: String, params: [String: Any], withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
         let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
         let url: URL = URL(string: api_url)!
@@ -325,7 +391,7 @@ public class Client {
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         request.httpBody = jsonData
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { return }
+            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
 
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
@@ -349,9 +415,11 @@ public class Client {
         }).resume()
     }
     
-    /**
-     Request to delete a document by ID
-     */
+    
+    /// Delete document from Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId: ID of document to delete.
+    ///   - completion: <#completion description#>
     public func deleteDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
         let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
@@ -362,7 +430,7 @@ public class Client {
         request.httpMethod = "DELETE"
         request.allHTTPHeaderFields = headers
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error){ return}
+            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
             
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
