@@ -27,29 +27,10 @@ class veryfi_swiftTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-//    func testExample() throws {
-//        // Use XCTAssert and related functions to verify your tests produce the correct results.
-//        throw XCTSkip("Skipped.")
-//
-//        my_client.get_documents(withCompletion: { detail, error in
-//            if error != nil {
-//                //handle error
-//            } else if detail == detail {
-//                //You can use detail here
-//                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
-//                    print("Error: Couldn't print JSON in String")
-//                    return
-//                }
-////                print(prettyPrintedJson)
-//            }
-//        })
-////        XCTAssert()
-//    }
-//
-    func testGetDocument() throws {
-        throw XCTSkip("Skipped.")
-
-        client.getDocument(documentId: "37825037", withCompletion: { detail, error in
+    func skip_testExample() throws {
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let expectation = XCTestExpectation(description: "Get data from update document")
+        client.getDocuments(withCompletion: { detail, error in
             if error != nil {
                 //handle error
             } else if detail == detail {
@@ -58,43 +39,73 @@ class veryfi_swiftTests: XCTestCase {
                     print("Error: Couldn't print JSON in String")
                     return
                 }
+//                print(prettyPrintedJson)
+                expectation.fulfill()
+            }
+        })
+        
+        wait(for: [expectation], timeout: 20.0)
+//        XCTAssert()
+    }
+
+    func skip_testGetDocument() throws {
+        let expectation = XCTestExpectation(description: "Get data from update document")
+        client.getDocument(documentId: "37825037", withCompletion: { detail, error in
+            if error != nil { //Handle error
+            } else if detail == detail {
+                //You can use detail here
+                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
+                    print("Error: Couldn't print JSON in String")
+                    return
+                }
+                expectation.fulfill()
                 print(prettyPrintedJson)
             }
         })
+        wait(for: [expectation], timeout: 20.0)
     }
     
-    func testTryDocument() throws {
-//        throw XCTSkip("Skipped.")
-        
-        client.updateDocument(documentId: "37825037", withCompletion: { detail, error in //params: ["date":"2016-01-20 00:00:00"], withCompletion: { detail, error in
+    func skip_testUpdateDocument() throws {
+        let expectation = XCTestExpectation(description: "Get data from update document")
+        client.updateDocument(documentId: "37825037", params: ["date":"2016-01-20 00:00:00"], withCompletion: { detail, error in
+            XCTAssertNotNil(detail, "No data was downloaded.")
             if error != nil {
-//                print(error)
+                print(error)
+                expectation.fulfill()
             } else if detail == detail {
                 guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
                     print("Error: Couldn't print JSON in String")
                     return
                 }
                 print(prettyPrintedJson)
+                expectation.fulfill()
+            }
+        })
+        wait(for: [expectation], timeout: 20.0)
+    }
+    
+    func skip_testDeleteDocument() throws {
+        client.deleteDocument(documentId: "37825037", withCompletion: { detail, error in
+            if error != nil {
+                //handle error
+            } else if detail == detail {
+                //You can use detail here
+                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
+                    print("Error: Couldn't print JSON in String")
+                    return
+                }
+//                print(prettyPrintedJson)
             }
         })
     }
     
-//    func testDeleteDocument() throws {
-//        throw XCTSkip("Skipped.")
-//
-////        my_client.delete_document(doc_id: "37825037", withCompletion: { detail, error in
-////            if error != nil {
-////                //handle error
-////            } else if detail == detail {
-////                //You can use detail here
-////                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
-////                    print("Error: Couldn't print JSON in String")
-////                    return
-////                }
-//////                print(prettyPrintedJson)
-////            }
-////        })
-//    }
+    func skip_testProcessDocument() throws {
+        
+    }
+    
+    func testProcessDocumentUrl() throws {
+        
+    }
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.

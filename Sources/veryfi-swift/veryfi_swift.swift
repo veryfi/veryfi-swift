@@ -164,7 +164,6 @@ public class Client {
                     return
                 }
                 
-                print(prettyPrintedJson)
                 completion(prettyJsonData, nil)
             } catch {
                 print("Error: Trying to convert JSON data to string")
@@ -198,13 +197,12 @@ public class Client {
     /**
      Upload a file from iOS
      */
-    public func processDocument(documentId: String,
-                                 fileName: String,
+    public func processDocument(fileName: String,
                                  categories: [String] = [], //Fix categories default
                                  deleteAfterProcessing: Bool = false,
                                  withCompletion completion: @escaping (Data?, Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
-        let apiUrl: String = "\(self.getUrl())/partner/documents/\(documentId)/"
+        let apiUrl: String = "\(self.getUrl())/partner/documents/"
         let url: URL = URL(string: apiUrl)!
         
         
@@ -217,7 +215,7 @@ public class Client {
         
         // generate boundary string using a unique per-app string
         let boundary = UUID().uuidString
-        let fileExtension = ".png"
+        let fileExtension = fileName.components(separatedBy: ".").last! //Throw error if incorrect file name
         
         // Set Content-Type Header to multipart/form-data, this is equivalent to submitting form data with file upload in a web browser
         // And the boundary is also set here
@@ -238,15 +236,16 @@ public class Client {
         }
         
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        let json: [String:Any] = ["file_name": fileName,
-                                  //            "file_data": base64_encoded_string,
-                                  "categories": self.CATEGORIES,
-                                  "auto_delete": deleteAfterProcessing
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: json)
+        
+//        let json: [String:Any] = ["file_name": fileName,
+//                                  "file_data": data,
+//                                  "categories": self.CATEGORIES,
+//                                  "auto_delete": deleteAfterProcessing]
+//
+//        request.httpBody = try? JSONSerialization.data(withJSONObject: json)
+        
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            print("----------------completion for datatask-----------------")
-            if self.check_err(data: data, response: response, error: error){ return}
+            if self.check_err(data: data, response: response, error: error) { return }
             
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
@@ -266,24 +265,68 @@ public class Client {
         }).resume()
     }
     
-    
+    public func processDocumentURL(fileUrl: String?,
+                                   fileUrls: [String]?,
+                                   categories: [String] = [], //Fix categories default
+                                   deleteAfterProcessing: Bool = false,
+                                   boostMode: Int = 0,
+                                   externalId: String?,
+                                   maxPagesToProcess: Int?,
+                                   withCompletion completion: @escaping (Data?, Error?) -> Void) {
+        let headers: [String:String] = self.getHeaders()
+        let apiUrl: String = "\(self.getUrl())/partner/documents/"
+        let url: URL = URL(string: apiUrl)!
+        
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = headers
+        let params: [String: Any] = ["auto_delete": deleteAfterProcessing,
+                            "boost_mode": boostMode,
+                            "categories": categories,
+                            "external_id": externalId as Any, //implicit coerce
+                            "file_url": fileUrl as Any, //implicit coerce
+                            "file_urls": fileUrls as Any, //implicit coerce
+                            "max_pages_to_process": maxPagesToProcess as Any] //implicit coerce
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        request.httpBody = jsonData
+        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            if self.check_err(data: data, response: response, error: error) { return }
+            
+            do {
+                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
+                    print("Error: Cannot convert data to JSON object")
+                    return
+                }
+                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
+                    print("Error: Cannot convert JSON object to Pretty JSON data")
+                    return
+                }
+                
+                completion(prettyJsonData, nil)
+            } catch {
+                print("Error: Trying to convert JSON data to string")
+                return
+            }
+        }).resume()
+    }
     
     /**
      Update a document using ID and passing parameters
      Works but returns no output
      */
-    public func updateDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
+    public func updateDocument(documentId: String, params: [String: Any], withCompletion completion: @escaping (Data?, Error?) -> Void) {
         let headers: [String:String] = self.getHeaders()
         let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
-        var components: URLComponents = URLComponents(string: api_url)!
-        components.queryItems = [URLQueryItem(name: "id", value: documentId)]
-        
-        var request: URLRequest = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
+        let url: URL = URL(string: api_url)!
+
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = "PUT"
         request.allHTTPHeaderFields = headers
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        request.httpBody = jsonData
         session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             if self.check_err(data: data, response: response, error: error) { return }
-            
+
             do {
                 guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
                     print("Error: Cannot convert data to JSON object")
@@ -297,50 +340,13 @@ public class Client {
                     print("Error: Couldn't print JSON in String")
                     return
                 }
-                
-                print(prettyPrintedJson)
+
                 completion(prettyJsonData, nil)
             } catch {
                 print("Error: Trying to convert JSON data to string")
                 return
             }
         }).resume()
-        //        let headers: [String:String] = self._get_headers()
-        ////        let api_url: String = "\(self._get_url())/partner/documents/\(doc_id)/"
-        //        let api_url: String = "\(self._get_url())/partner/documents/"
-        //        let url: URL = URL(string: api_url)!
-        //
-        //        var request: URLRequest = URLRequest(url: url)
-        //        request.httpMethod = "GET"
-        //        request.allHTTPHeaderFields = headers
-        ////        let jsonData = try? JSONSerialization.data(withJSONObject: params)
-        ////        request.httpBody = jsonData
-        //        print("START TASK")
-        //        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-        //            if self.check_err(data: data, response: response, error: error){ return}
-        //
-        //            do {
-        //                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
-        //                    print("Error: Cannot convert data to JSON object")
-        //                    return
-        //                }
-        //                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-        //                    print("Error: Cannot convert JSON object to Pretty JSON data")
-        //                    return
-        //                }
-        //                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-        //                    print("Error: Couldn't print JSON in String")
-        //                    return
-        //                }
-        //
-        //                print(prettyPrintedJson)
-        //                completion(prettyJsonData, nil)
-        //            } catch {
-        //                print("Error: Trying to convert JSON data to string")
-        //                return
-        //            }
-        //        }).resume()
-        //        print("END FUNC")
     }
     
     /**
@@ -384,7 +390,7 @@ public class Client {
 
 
 
-
+/*
 //    /**
 //     Generate unique signature for payload params.
 //     :param payload_params: JSON params to be sent to API request
@@ -482,8 +488,9 @@ public class Client {
 //        let endpoint_name = "/documents/"
 //        let request_arguments: [String:String] = [:]
 //        let documents = self._request(http_verb: "GET", endpoint_name: endpoint_name, request_arguments: request_arguments)
-////        if "documents" in documents{
-////                return documents["documents"]
-////        }
+//        if "documents" in documents{
+//                return documents["documents"]
+//        }
 //        return documents
 //    }
+*/
