@@ -1,5 +1,7 @@
 import Foundation
+import _Concurrency
 
+@available(macOS 12.0.0, *)
 public class Client {
     
     let clientId : String
@@ -139,38 +141,12 @@ public class Client {
     ///   - completion: Block executed after request.
     ///   - detail: Response from server.
     ///   - error: Error from server.
-    public func getDocument(documentId: String, withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
-        let headers: [String:String] = self.getHeaders()
-        let apiUrl: String = "\(self.getUrl())/partner/documents/\(documentId)/"
-        var components: URLComponents = URLComponents(string: apiUrl)!
-        components.queryItems = [URLQueryItem(name: "id", value: documentId)]
+    public func getDocument(documentId: String) async throws -> [String:Any] {
+        let (data,response) = try await self.request(http_verb: "GET", endpointName: "/\(documentId)/", params: ["id":documentId])
+        guard (response as! HTTPURLResponse).statusCode == 200 else {throw MyError.runtimeError(response)}
         
-        var request: URLRequest = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
-
-            do {
-                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
-                    print("Error: Cannot convert data to JSON object")
-                    return
-                }
-                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-                    print("Error: Cannot convert JSON object to Pretty JSON data")
-                    return
-                }
-                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-                    print("Error: Couldn't print JSON in String")
-                    return
-                }
-                
-                completion(prettyJsonData, nil)
-            } catch {
-                print("Error: Trying to convert JSON data to string")
-                return
-            }
-        }).resume()
+        let jsonObject = (try JSONSerialization.jsonObject(with: data) as? [String: Any])!
+        return jsonObject
     }
     
     /// Upload an image for the Veryfi API to process.
@@ -319,79 +295,60 @@ public class Client {
     ///   - completion: A block to execute
     ///   - detail: Response from server.
     ///   - error: Error from server.
-    public func updateDocument(documentId: String, params: [String: Any], withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
-        let headers: [String:String] = self.getHeaders()
-        let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
-        let url: URL = URL(string: api_url)!
-
-        var request: URLRequest = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.allHTTPHeaderFields = headers
-        let jsonData = try? JSONSerialization.data(withJSONObject: params)
-        request.httpBody = jsonData
-        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
-
-            do {
-                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
-                    print("Error: Cannot convert data to JSON object")
-                    return
-                }
-                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-                    print("Error: Cannot convert JSON object to Pretty JSON data")
-                    return
-                }
-                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-                    print("Error: Couldn't print JSON in String")
-                    return
-                }
-
-                completion(prettyJsonData, nil)
-            } catch {
-                print("Error: Trying to convert JSON data to string")
-                return
-            }
-        }).resume()
+    public func updateDocument(documentId: String, params: [String: Any]) async throws -> [String:Any] {
+        let (data,response) = try await self.request(http_verb: "PUT", endpointName: "/\(documentId)/", params: params)
+        guard (response as! HTTPURLResponse).statusCode == 200 else {throw MyError.runtimeError(response)}
+        
+        let jsonObject = (try JSONSerialization.jsonObject(with: data) as? [String: Any])!
+        return jsonObject
     }
     
     
     /// Delete document from Veryfi inbox.
     /// - Parameters:
     ///   - documentId: ID of document to delete.
-    ///   - completion: <#completion description#>
-    public func deleteDocument(documentId: String, withCompletion completion: @escaping (Data?, Error?) -> Void) {
-        let headers: [String:String] = self.getHeaders()
-        let api_url: String = "\(self.getUrl())/partner/documents/\(documentId)/"
-        var components: URLComponents = URLComponents(string: api_url)!
-        components.queryItems = [URLQueryItem(name: "id", value: documentId)]
+    /// - Returns: JSON object of data
+    public func deleteDocument(documentId: String) async throws -> [String:Any] {
+        let (data,response) = try await self.request(http_verb: "DELETE", endpointName: "/\(documentId)/", params: ["id":documentId])
+        guard (response as! HTTPURLResponse).statusCode == 200 else {throw MyError.runtimeError(response)}
         
-        var request: URLRequest = URLRequest(url: components.url!)
-        request.httpMethod = "DELETE"
+        let jsonObject = (try JSONSerialization.jsonObject(with: data) as? [String: Any])!
+        return jsonObject
+    }
+    
+    /// Make generic async request to server
+    /// - Parameters:
+    ///   - http_verb: GET, POST, PUT, DELETE
+    ///   - endpointName: Endpoint specified in API
+    ///   - params: Request params
+    /// - Returns: Object of data
+    private func request(http_verb: String, endpointName: String, params: [String:Any]) async throws -> (Data,URLResponse) {
+        let headers: [String:String] = self.getHeaders()
+        let apiUrl: String = "\(self.getUrl())/partner/documents\(endpointName)"
+        let url: URL = URL(string: apiUrl)!
+        /*
+        if self.client_secret != "" {
+            let timestamp = NSDate().timeIntervalSince1970
+            let myTimeInterval = TimeInterval(timestamp)
+            let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
+//            let signature = self._generate_signature(request_arguments, timestamp=timestamp)
+            headers["X-Veryfi-Request-Timestamp"] = String(format: "%f", time)
+//            headers["X-Veryfi-Request-Signature"] = signature
+        }
+        */
+        var request: URLRequest = URLRequest(url: url)
+        request.httpMethod = http_verb
         request.allHTTPHeaderFields = headers
-        session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
-            
-            do {
-                guard let jsonObject = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else { //force unwrapping data
-                    print("Error: Cannot convert data to JSON object")
-                    return
-                }
-                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-                    print("Error: Cannot convert JSON object to Pretty JSON data")
-                    return
-                }
-                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-                    print("Error: Couldn't print JSON in String")
-                    return
-                }
-                
-                print(prettyPrintedJson)
-                completion(prettyJsonData, nil)
-            } catch {
-                print("Error: Trying to convert JSON data to string")
-                return
-            }
-        }).resume()
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        request.httpBody = jsonData
+        
+        let (data, response) = try await session.data(for: request)
+        guard (response as? HTTPURLResponse)!.statusCode == 200 else {throw MyError.runtimeError(response)}
+        return (data,response)
+    }
+    
+    enum MyError: Error { //Generic error to throw
+        case runtimeError(URLResponse)
     }
 }
 
@@ -425,67 +382,7 @@ public class Client {
 //     :param request_arguments: JSON payload to send to Veryfi
 //     :return: A JSON of the response data.
 //     */
-//    private func _request(http_verb: String, endpoint_name: String, request_arguments: [String:String]){
-//
-//        var headers = self._get_headers()
-//        let api_url = "\(self._get_url())/partner\(endpoint_name)"
-//        let url = URL(string: api_url)!
-//
-//        if self.client_secret != "" {
-//            let timestamp = NSDate().timeIntervalSince1970
-//            let myTimeInterval = TimeInterval(timestamp)
-//            let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
-////            let signature = self._generate_signature(request_arguments, timestamp=timestamp)
-//            headers["X-Veryfi-Request-Timestamp"] = String(format: "%f", time)
-////            headers["X-Veryfi-Request-Signature"] = signature
-//        }
-//
-//        // Convert model to JSON data
-//        guard let jsonData = try? JSONEncoder().encode(request_arguments) else {
-//            print("Error: Trying to convert model to JSON data")
-//            return
-//        }
-//        // Create the url request
-//        var request = URLRequest(url: url)
-//        request.httpMethod = http_verb
-//        request.allHTTPHeaderFields = headers
-//        request.httpBody = jsonData
-////        request.timeoutInterval = self.timeout
-//        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-//            guard error == nil else {
-//                print("Error: error calling request")
-//                print(error!)
-//                return
-//            }
-//            guard let data = data else {
-//                print("Error: Did not receive data")
-//                return
-//            }
-//            guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
-//                print("Error: HTTP request failed")
-//                return
-//            }
-//            do {
-//                guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-//                    print("Error: Cannot convert data to JSON object")
-//                    return
-//                }
-//                guard let prettyJsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted) else {
-//                    print("Error: Cannot convert JSON object to Pretty JSON data")
-//                    return
-//                }
-//                guard let prettyPrintedJson = String(data: prettyJsonData, encoding: .utf8) else {
-//                    print("Error: Couldn't print JSON in String")
-//                    return
-//                }
-//
-//                print(prettyPrintedJson)
-//            } catch {
-//                print("Error: Trying to convert JSON data to string")
-//                return
-//            }
-//        }).resume()
-//    }
+ 
 //
 //    /**
 //     Get list of documents
