@@ -108,7 +108,36 @@ class veryfi_swiftTests: XCTestCase {
     func testProcessDocument() throws {
         let expectation = XCTestExpectation(description: "Get data from processing document")
         
-        client.processDocument(fileName: "receipt.png", withCompletion: { detail, error in
+        /// Retrieve and encode file.
+        /// - Parameter fileName: Full name of file.
+        /// - Returns: UInt8 encoded file data.
+        func getFile(fileName: String) -> [UInt8]? {
+            let testCaseURL = URL(fileURLWithPath: "\(#file)", isDirectory: false)
+            let testsFolderURL = testCaseURL.deletingLastPathComponent()
+            let url = testsFolderURL.appendingPathComponent("\(fileName)", isDirectory: false)
+            do {
+                let data = try Data(contentsOf: url)
+                return [UInt8](data)
+            } catch {
+                print("Not found: ", url)
+                expectation.fulfill()
+                return nil
+            }
+        }
+        
+        let fileName = "receipt.png"
+        
+        var fileData = Data()
+        if let bytes: [UInt8] = getFile(fileName: fileName) {
+            for byte in bytes {
+                fileData.append(byte)
+            }
+        } else {
+            print("File unreadable")
+            expectation.fulfill()
+        }
+        
+        client.processDocument(fileName: fileName, fileData: fileData, withCompletion: { detail, error in
             if error != nil {
                 print(error)
                 expectation.fulfill()

@@ -173,64 +173,11 @@ public class Client {
         }).resume()
     }
     
-    
-    /// Retrieve and encode file.
-    /// - Parameter fileName: Full name of file.
-    /// - Returns: UInt8 encoded file data.
-    private func getFile(fileName: String) -> [UInt8]? {
-        let testCaseURL = URL(fileURLWithPath: "\(#file)", isDirectory: false)
-        let testsFolderURL = testCaseURL.deletingLastPathComponent()
-//        let resourcesFolderURL = testsFolderURL.deletingLastPathComponent().appendingPathComponent("veryfi-swift", isDirectory: true)
-        let url = testsFolderURL.appendingPathComponent("\(fileName)", isDirectory: false)
-        do {
-            let data = try Data(contentsOf: url)
-            return [UInt8](data)
-        } catch {
-            print("Not found")
-            return nil
-        }
-//        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-//            let fileURL = dir.appendingPathComponent(fileName)
-//            do {
-//                // Get the raw data from the file.
-////                let rawData: Data = try Data(contentsOf: fileURL)
-//                let stream = InputStream(url: fileURL)!
-//                stream.open()
-//                defer {
-//                    stream.close()
-//                }
-//                var rawData = Data()
-//                let bufferSize = 1024
-//                let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
-//                defer {
-//                    buffer.deallocate()
-//                }
-//                print(stream.hasBytesAvailable)
-//                while stream.hasBytesAvailable {
-//                    let read = stream.read(buffer, maxLength: bufferSize)
-//                    if read < 0 {
-//                        throw InputStream().streamError!
-//                    } else if read == 0 {
-//                        break
-//                    }
-//                    rawData.append(buffer, count:read)
-//                }
-//                // Return the raw data as an array of bytes.
-//                return [UInt8](rawData)
-//            } catch {
-//                print("Couldn't read the file.")
-//                return nil
-//            }
-//        }
-//        print("\(fileName) not exist")
-//        return nil
-    }
-    
-    
-    /// Upload a file for the Veryfi API to process.
+    /// Upload an image for the Veryfi API to process.
     ///
     /// - Parameters:
     ///     - fileName: Name of the file to upload to the Veryfi API.
+    ///     - fileData: UTF8 encoded file data
     ///     - categories: List of document categories.
     ///     - deleteAfterProcessing: Do not store file in Veryfi's inbox.
     ///     - params: Additional parameters.
@@ -238,59 +185,51 @@ public class Client {
     ///     -  detail: Response from server.
     ///     -  error: Error from server.
     public func processDocument(fileName: String,
+                                fileData: Data,
                                  categories: [String]? = nil,
                                  deleteAfterProcessing: Bool = false,
-                                 params: [String: Any]? = nil,
+                                 params: [String: Any] = [:],
                                  withCompletion completion: @escaping (_ detail: Data?, _ error: Error?) -> Void) {
+        let requestCats = categories ?? self.CATEGORIES
+        var optionalParams: [String:Any] = ["categories": requestCats,
+                                  "auto_delete": deleteAfterProcessing]
+        for (k, v) in params {
+            optionalParams.updateValue(v, forKey: k)
+        }
+        let fileExtend = fileName.components(separatedBy: ".").last! //Add error for need to include file extension
+        let mimeType = "image/\(fileExtend)"
+        
         let headers: [String:String] = self.getHeaders()
         let apiUrl: String = "\(self.getUrl())/partner/documents/"
         let url: URL = URL(string: apiUrl)!
-        
-        
         var request: URLRequest = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = headers
         
-        
         var data = Data()
         
-        // generate boundary string using a unique per-app string
-        let boundary = UUID().uuidString
-        
-        // Set Content-Type Header to multipart/form-data, this is equivalent to submitting form data with file upload in a web browser
-        // And the boundary is also set here
+        let boundary = "Boundary-\(UUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
-        // Add the file data to the raw http request data
-        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+        data.append("--\(boundary)\r\n".data(using: .utf8)!)
         data.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: \"image/png\"\r\n\r\n".data(using: .utf8)!)
-        
-        if let bytes: [UInt8] = getFile(fileName: fileName) {
-            for byte in bytes {
-                data.append(byte)
-            }
-        } else {
-            print("Did not work")
-            completion(nil,nil)
-        }
-        
+        data.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+        data.append(fileData)
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
         
-        //Add other params
         data.append("Content-Disposition: form-data; name=\"file_name\"\r\n".data(using: .utf8)!)
-        data.append("\r\n\"receipt.png\"".data(using: .utf8)!)
-        data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-        //
+        data.append("\r\n\"\(fileName)\"".data(using: .utf8)!)
+        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
         
-        let params: [String:Any] = ["categories": self.CATEGORIES,
-                                  "auto_delete": deleteAfterProcessing]
-//        for (key,value) in params {
-//            data.append("Content-Disposition: form-data; name=\"\(key)\";\r\n".data(using: .utf8)!)
-//            data.append("\"\(value)\"".data(using: .utf8)!)
-//            data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-//        }
+        for (key,value) in optionalParams {
+            data.append("Content-Disposition: form-data; name=\"\(key)\";\r\n".data(using: .utf8)!)
+            data.append("\"\(value)\"".data(using: .utf8)!)
+            data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+        }
+        data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        
         print(String(decoding:data, as: UTF8.self))
+        
         session.uploadTask(with: request, from: data, completionHandler: { data, response, error -> Void in
             if self.check_err(data: data, response: response, error: error) { completion(nil, error) }
 
