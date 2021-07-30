@@ -29,31 +29,27 @@ class veryfi_swiftTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func skip_testGetAllDocuments() throws {
+    func testGetAllDocuments() async throws {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let expectation = XCTestExpectation(description: "Get data from update document")
-        client.getDocuments(withCompletion: { detail, error in
-            if error != nil {
-                //handle error
-            } else if detail == detail {
-                //You can use detail here
-                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
-                    print("Error: Couldn't print JSON in String")
-                    return
-                }
-//                print(prettyPrintedJson)
-                expectation.fulfill()
-            }
-        })
-        
-        wait(for: [expectation], timeout: 20.0)
+//        let expectation = XCTestExpectation(description: "Get data from update document")
+        let (resData,res) = try await client.getDocuments()
+        guard let jsonObject = try JSONSerialization.jsonObject(with: resData) as? [String: Any] else { //force unwrapping data
+            print("Error: Cannot convert data to JSON object")
+            return
+        }
+        print(jsonObject)
+//        wait(for: [expectation], timeout: 20.0)
 //        XCTAssert()
     }
 
     func testGetDocument() async throws {
 //        let expectation = XCTestExpectation(description: "Get data from update document")
-        let res = try? await client.getDocument(documentId: "38583124")
-        print(res)
+        let (resData,res) = try await client.getDocument(documentId: "38583124")
+        guard let jsonObject = try JSONSerialization.jsonObject(with: resData) as? [String: Any] else { //force unwrapping data
+            print("Error: Cannot convert data to JSON object")
+            return
+        }
+        print(jsonObject)
 //        , withCompletion: { detail, error in
 //            if error != nil { //Handle error
 //            } else if detail == detail {
@@ -69,11 +65,15 @@ class veryfi_swiftTests: XCTestCase {
 //        wait(for: [expectation], timeout: 20.0)
     }
     
-    func skip_testUpdateDocument() async throws {
+    func testUpdateDocument() async throws {
 //        let expectation = XCTestExpectation(description: "Get data from update document")
         
-        let res = try? await client.updateDocument(documentId: "37825037", params: ["date":"2016-01-20 00:00:00"])
-        print(res)
+        let (resData,res) = try await client.updateDocument(documentId: "38583124", params: ["date":"2016-01-20 00:00:00"])
+        guard let jsonObject = try JSONSerialization.jsonObject(with: resData) as? [String: Any] else { //force unwrapping data
+            print("Error: Cannot convert data to JSON object")
+            return
+        }
+        print(jsonObject)
 //                              , withCompletion: { detail, error in
 //            XCTAssertNotNil(detail, "No data was downloaded.")
 //            if error != nil {
@@ -94,8 +94,7 @@ class veryfi_swiftTests: XCTestCase {
     func skip_testDeleteDocument() async throws {
 //        let expectation = XCTestExpectation(description: "Delete document")
         
-        let res = try? await client.deleteDocument(documentId: "37825037")
-        print(res)
+        let (resData,res) = try await client.deleteDocument(documentId: "37825037")
 //        , withCompletion: { detail, error in
 //            if error != nil {
 //                print(error)
@@ -113,7 +112,7 @@ class veryfi_swiftTests: XCTestCase {
 //        wait(for: [expectation], timeout: 20.0)
     }
     
-    func skip_testProcessDocument() throws {
+    func testProcessDocument() async throws {
         let expectation = XCTestExpectation(description: "Get data from processing document")
         
         /// Retrieve and encode file.
@@ -134,7 +133,6 @@ class veryfi_swiftTests: XCTestCase {
         }
         
         let fileName = "receipt.png"
-        
         var fileData = Data()
         if let bytes: [UInt8] = getFile(fileName: fileName) {
             for byte in bytes {
@@ -145,46 +143,33 @@ class veryfi_swiftTests: XCTestCase {
             expectation.fulfill()
         }
         
-        client.processDocument(fileName: fileName, fileData: fileData, withCompletion: { detail, error in
-            if error != nil {
-                print(error)
-                expectation.fulfill()
-                return
-            } else if detail != nil {
-                //You can use detail here
-                let prettyPrintedJson = String(data: detail!, encoding: .utf8)!
-                print(prettyPrintedJson)
-                expectation.fulfill()
-                return
-            }
-            print("Error: Couldn't print JSON in String")
-            expectation.fulfill()
+        //Make the request
+        let (resData,res) = try await client.processDocument(fileName: fileName, fileData: fileData)
+        guard (res as? HTTPURLResponse)!.statusCode < 300 else {throw Client.MyError.runtimeError(res)}
+        
+        guard let jsonObject = try JSONSerialization.jsonObject(with: resData) as? [String: Any] else { //force unwrapping data
+            print("Error: Cannot convert data to JSON object")
             return
-        })
+        }
+        print(jsonObject)
+        expectation.fulfill()
         wait(for: [expectation], timeout: 20.0)
     }
     
-    func skip_testProcessDocumentUrl() throws {
+    func testProcessDocumentUrl() async throws {
         let expectation = XCTestExpectation(description: "POST file url and return response")
         
-        client.processDocumentURL(fileUrls: ["https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg"], withCompletion: { detail, error in
-            if error != nil {
-                print("ERROR IN OUTPUT")
-                print(error)
-                expectation.fulfill()
-            } else if detail == detail {
-                guard let prettyPrintedJson = String(data: detail!, encoding: .utf8) else {
-                    print("Error: Couldn't print JSON in String")
-                    return
-                }
-                print(prettyPrintedJson)
-                expectation.fulfill()
-            }
-        })
+        let (resData,res) = try await client.processDocumentURL(fileUrls: ["https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg"])
+        guard let jsonObject = try JSONSerialization.jsonObject(with: resData) as? [String: Any] else { //force unwrapping data
+            print("Error: Cannot convert data to JSON object")
+            return
+        }
+        print(jsonObject)
+        expectation.fulfill()
         wait(for: [expectation], timeout: 20.0)
     }
 
-    func testPerformanceExample() throws {
+    func skip_testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {
             // Put the code you want to measure the time of here.
