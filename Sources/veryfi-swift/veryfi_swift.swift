@@ -1,6 +1,6 @@
 import Foundation
 import _Concurrency
-
+import CryptoKit
 @available(macOS 12.0.0, *)
 public class Client {
     
@@ -68,7 +68,7 @@ public class Client {
     /// - Returns: Data and response containing all files from Veryfi inbox.
     public func getDocuments() async throws -> (Data,URLResponse) {
         let (data,response) = try await self.request(http_verb: "GET", endpointName: "/", params: [:])
-        guard (response as! HTTPURLResponse).statusCode == 200 else {throw MyError.runtimeError(response)}
+        guard (response as! HTTPURLResponse).statusCode < 300 else {throw MyError.runtimeError(response)}
         
         return (data,response)
     }
@@ -197,9 +197,7 @@ public class Client {
                             "file_url": fileUrl as Any, //implicit coerce
                             "file_urls": fileUrls as Any, //implicit coerce
                             "max_pages_to_process": maxPagesToProcess as Any] //implicit coerce
-//        let jsonData = try? JSONSerialization.data(withJSONObject: params)
         let (data,response) = try await request(http_verb: "POST", endpointName: "/", params: params)
-        print("STATUS CODE IS: ",(response as! HTTPURLResponse).statusCode)
         guard (response as! HTTPURLResponse).statusCode < 300 else {throw MyError.runtimeError(response)}
         
         return (data,response)
@@ -242,16 +240,16 @@ public class Client {
     private func request(http_verb: String, endpointName: String, params: [String:Any]) async throws -> (Data,URLResponse) {
         let headers: [String:String] = self.getHeaders()
         let apiUrl: String = "\(self.getUrl())/partner/documents\(endpointName)"
-        /*
-        if self.client_secret != "" {
-            let timestamp = NSDate().timeIntervalSince1970
-            let myTimeInterval = TimeInterval(timestamp)
-            let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
-//            let signature = self._generate_signature(request_arguments, timestamp=timestamp)
-            headers["X-Veryfi-Request-Timestamp"] = String(format: "%f", time)
-//            headers["X-Veryfi-Request-Signature"] = signature
-        }
-        */
+        
+//        if self.client_secret != "" {
+//            let timestamp = NSDate().timeIntervalSince1970
+//            let myTimeInterval = TimeInterval(timestamp)
+//            let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
+////            let signature = self._generate_signature(request_arguments, timestamp=timestamp)
+//            headers["X-Veryfi-Request-Timestamp"] = String(format: "%f", time)
+////            headers["X-Veryfi-Request-Signature"] = signature
+//        }
+        
         var components: URLComponents = URLComponents(string: apiUrl)!
         
         var request: URLRequest = URLRequest(url: components.url!)
@@ -266,40 +264,43 @@ public class Client {
                 components.queryItems!.append(URLQueryItem(name: k, value: "\(v)"))
             }
         }
-        
-//        let jsonData = try? JSONSerialization.data(withJSONObject: params)
-//        request.httpBody = jsonData
-        
+
         let (data, response) = try await session.data(for: request)
-//        guard (response as? HTTPURLResponse)!.statusCode < 300 else {throw MyError.runtimeError(response)}
         return (data,response)
+    }
+    
+    private func convertToJson(resData: Data) throws -> [String:Any] {
+        guard let res = try JSONSerialization.jsonObject(with: resData) as? [String: Any] else {
+            throw MyError.jsonError("Error: Could not convert response to object")
+        }
+        return res
     }
     
     enum MyError: Error { //Generic error to throw
         case runtimeError(URLResponse)
+        case fileError(String)
+        case serverError(String,String)
+        case jsonError(String)
     }
-}
-
-
-
-/*
-//    /**
-//     Generate unique signature for payload params.
-//     :param payload_params: JSON params to be sent to API request
-//     :param timestamp: Unix Long timestamp
-//     :return: Unique signature generated using the client_secret and the payload
-//     */
-//    private func _generate_signature(payload_params: Dictionary<String,Any>, timestamp: String) -> String{
+    
+    /**
+     Generate unique signature for payload params.
+     :param payload_params: JSON params to be sent to API request
+     :param timestamp: Unix Long timestamp
+     :return: Unique signature generated using the client_secret and the payload
+     */
+//    private func _generate_signature(payload_params: [String:Any], timestamp: String) -> String{
 //        var payload = "timestamp:\(timestamp)"
 //        for key in payload_params.keys{
 //            let value = payload_params[key]
 //            payload = "\(payload),\(key):\(value)"
 //        }
 //
-//        let secret_bytes = String(UTF8String: self.client_secret.cStringUsingEncoding(NSUTF8StringEncoding))
-//        let payload_bytes = String(UTF8String: payload.cStringUsingEncoding(NSUTF8StringEncoding))
-//        let tmp_signature = hmac.new(secret_bytes, msg=payload_bytes, digestmod=hashlib.sha256).digest()
+//        let secretBytes = self.clientSecret.data(using: String.Encoding.utf8)
+//        let payloadBytes = "\(payload)".data(using: String.Encoding.utf8)
+//        let tmp_signature = hmac.new(secretBytes, msg=payloadBytes, digestmod=hashlib.sha256).digest()
 //        let base64_signature = base64.b64encode(tmp_signature).decode("utf-8").strip()
 //        return base64_signature
 //    }
-*/
+}
+
