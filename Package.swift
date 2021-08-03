@@ -23,6 +23,8 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "veryfi-swiftTests",
-            dependencies: ["veryfi-swift"]),
+            dependencies: ["veryfi-swift",],
+            resources: [.process("receipt.png")]
+        ),
     ]
 )

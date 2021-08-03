@@ -14,8 +14,6 @@ class veryfi_errorTests: XCTestCase {
 
     override func setUpWithError() throws {
         client = Client(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
     }
     
     func badAuthenticationGetDocumentsThrowsRuntimeError() async throws {
@@ -23,18 +21,19 @@ class veryfi_errorTests: XCTestCase {
         do {
             _ = try await badClient.getDocuments()
             XCTFail("Expected to throw but succeeded")
+            
         } catch {
             XCTAssert(true) //Temporary until can assert errors
         }
     }
 
     func testGetDocumentWithBadDocumentId() async throws {
-//        let expectation = XCTestExpectation(description: "Get data from update document")
         let documentId = "00000000"
         do {
             _ = try await client.getDocument(documentId: documentId)
             XCTFail("Expected to throw but succeeded")
         } catch {
+            print(error)
             XCTAssert(true) //Temporary until can assert errors
         }
     }
@@ -70,22 +69,19 @@ class veryfi_errorTests: XCTestCase {
         }
     }
     
-    func testProcessDocumentWithMissingDocument() async throws {
-        let expectation = XCTestExpectation(description: "Throw runtime error with nonexistent document")
-        
+    func testProcessDocumentWithMissingDocument() async throws {        
         let fileData = Data()
         
         do {
-            _ = try await client.processDocument(fileName: "invalid document name", fileData: fileData)
+            let (resData,response) = try await client.processDocument(fileName: "invalid document name", fileData: fileData)
+            print(resData,response)
             XCTFail("Expected to throw but succeeded")
         } catch {
             XCTAssert(true) //Temporary until can assert errors
         }
     }
     
-    func testProcessDocumentUrlWithInvalidUrl() async throws {
-        let expectation = XCTestExpectation(description: "Throw runtime error when given invalid url to access.")
-        
+    func testProcessDocumentUrlWithInvalidUrl() async throws {        
         do {
             _ = try await client.processDocumentURL(fileUrls: ["https://invalid-url-to-a-website-throw-error.com"])
             XCTFail("Expected to throw but succeeded")
@@ -94,8 +90,7 @@ class veryfi_errorTests: XCTestCase {
         }
     }
 
-    func skip_testPerformanceExample() throws {
-        // This is an example of a performance test case.
+    func skip_testPerformance() throws {
         self.measure {
             // Put the code you want to measure the time of here.
         }
