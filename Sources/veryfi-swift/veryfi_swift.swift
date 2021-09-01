@@ -262,7 +262,7 @@ public class Client {
         return res
     }
     
-    enum VeryfiError: Error { //Generic error to throw
+    enum VeryfiError: Error {
         case runtimeError(Int,Any)
         case jsonError(String)
         
