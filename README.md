@@ -21,10 +21,10 @@
 
 ## Installation
 
-Install from [cocoapods](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), a package manager for Swift.
+Install from [cocoapods](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), a package manager for Swift. **(Replace with pods)**
 
 ```bash
-npm i @veryfi/veryfi-sdk
+pod install veryfi_swift
 ```
 
 You may need to run the above command with `sudo`.
@@ -37,18 +37,18 @@ If you don't have an account with Veryfi, please go ahead and register here: [ht
 
 ### Swift Framework Client Library
 
-The **veryfi** library can be used to communicate with Veryfi API. All available functionality is described here <https://veryfi.github.io/veryfi-nodejs/Client.html>
+The **Veryfi** library can be used to communicate with Veryfi API. All available functionality is described here <https://veryfi.github.io/veryfi-nodejs/Client.html> **(Replace with Swift GH site)**
 
-Below is the sample script using **veryfi** to OCR and extract data from a document:
+Below is the sample script using **veryfi** to read and extract data from a document:
 
 ### Extracting Data
 
 ```swift
-import Veryfi
-let clientId: String = 'your_client_id';
-let clientSecret: String = 'your_client_secret';
-let username: String = 'your_username';
-let apiKey: String = 'your_api_key';
+import veryfi_swift
+let clientId: String = 'your_client_id'
+let clientSecret: String = 'your_client_secret'
+let username: String = 'your_username'
+let apiKey: String = 'your_api_key'
 
 let categories: [String] = ['Grocery', 'Utilities', 'Travel']
 let fileData: Data = Data(YOUR FILE AS A DATA OBJECT)
@@ -66,7 +66,7 @@ print(response)
 
 ```swift
 let response = await myClient.processDocumentUrl(fileUrl: url);
-print(response);
+print(response)
 ```
 
 ### Response
@@ -234,7 +234,7 @@ myClient.updateDocument(documentId: 12345, params:
         'vendor': newVendor,
         'category': newCategory,
         'total': newTotal
-    ]);
+    ])
 ```
 
 ## Need help?
