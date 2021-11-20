@@ -1,21 +1,22 @@
-//
-//  VeryfiSDK.swift
-//
-//
-//  Created by Diego Giraldo Gómez on 3/11/21.
-//
-
 import Foundation
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
+
 
 struct VeryfiCredentials {
-    let clientId : String
-    let clientSecret : String
-    let username : String
-    let apiKey : String
+    let clientId: String
+    let clientSecret: String
+    let username: String
+    let apiKey: String
 }
 
-public struct VeryfiSDK {
-    let credentials: VeryfiCredentials
+class Client: NetworkManager {
+    
+    init(clientId: String, clientSecret: String, username: String, apiKey: String, apiVersion: String = "v8") {
+        let credentials = VeryfiCredentials(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
+        super.init(credentials: credentials, apiVersion: apiVersion)
+    }
     
     /// Get all documents from Veryfi inbox.
     /// - Parameters:
@@ -23,8 +24,7 @@ public struct VeryfiSDK {
     ///   - detail: Response from server.
     ///   - error: Error from server.
     public func getDocuments(withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
-        let manager = NetworkManager(credentials: credentials)
-        manager.request(method: .GET, route: .documents, completion: completion)
+        self.request(method: .GET, route: .documents, completion: completion)
     }
     
     /// Get single document by ID from Veryfi inbox.
@@ -34,8 +34,7 @@ public struct VeryfiSDK {
     ///   - detail: Response from server.
     ///   - error: Error from server.
     public func getDocument(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
-        let manager = NetworkManager(credentials: credentials)
-        manager.request(method: .GET, route: .documents, queryItem: documentId, completion: completion)
+        self.request(method: .GET, route: .documents, queryItem: documentId, completion: completion)
     }
     
     /// Upload an image for the Veryfi API to process.
@@ -50,45 +49,23 @@ public struct VeryfiSDK {
     ///     -  error: Error from server.
     public func processDocument(fileName: String,
                                 fileData: Data,
-                                 categories: [String]? = nil,
-                                 deleteAfterProcessing: Bool = false,
-                                 params: [String: Any] = [:],
-                                 withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+                                categories: [String]? = nil,
+                                deleteAfterProcessing: Bool = false,
+                                params: [String: Any]? = nil,
+                                withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
         let requestCats = categories ?? []
-        var optionalParams: [String:Any] = ["categories": requestCats,
-                                            "auto_delete": deleteAfterProcessing]
-        for (k, v) in params {
-            optionalParams.updateValue(v, forKey: k)
-        }
-        guard let fileExtend = fileName.components(separatedBy: ".").last else {
-            completion(.failure(.internalError))
+        var requestParams = params ?? [String: Any]()
+        requestParams["categories"] = requestCats
+        requestParams["auto_delete"] = deleteAfterProcessing
+        requestParams["file_data"] = fileData.base64EncodedString()
+        requestParams["file_name"] = fileName
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: requestParams, options: .prettyPrinted) else {
+            completion(.failure(.parsingError))
             return
         }
         
-        let mimeType = "image/\(fileExtend)"
-        
-        var data = Data()
-        
-        let boundary = "Boundary-\(UUID().uuidString)"
-        
-        data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
-        data.append(fileData)
-        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file_name\"\r\n".data(using: .utf8)!)
-        data.append("\r\n\"\(fileName)\"".data(using: .utf8)!)
-        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        
-        for (key,value) in optionalParams {
-            data.append("Content-Disposition: form-data; name=\"\(key)\";\r\n".data(using: .utf8)!)
-            data.append("\"\(value)\"".data(using: .utf8)!)
-            data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        }
-        data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-        
-        let manager = NetworkManager(credentials: credentials)
-        manager.request(method: .POST, route: .documents, uploadData: data, completion: completion)
+        self.request(method: .POST, route: .documents, uploadData: jsonData, completion: completion)
     }
     
     /// Upload document to Veryfi API with URL.
@@ -119,8 +96,7 @@ public struct VeryfiSDK {
                                      "file_urls": fileUrls as Any, //implicit coerce
                                      "max_pages_to_process": maxPagesToProcess as Any] //implicit coerce
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
-        let manager = NetworkManager(credentials: credentials)
-        manager.request(method: .POST, route: .documents, body: jsonData, completion: completion)
+        self.request(method: .POST, route: .documents, body: jsonData, completion: completion)
     }
     
     /// Update information of document in Veryfi inbox.
@@ -131,9 +107,8 @@ public struct VeryfiSDK {
     ///   - detail: Response from server.
     ///   - error: Error from server.
     public func updateDocument(documentId: String, params: [String: Any], withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
-        let manager = NetworkManager(credentials: credentials)
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
-        manager.request(method: .PUT, route: .documents, body: jsonData, queryItem: documentId, completion: completion)
+        self.request(method: .PUT, route: .documents, body: jsonData, queryItem: documentId, completion: completion)
     }
 
     /// Delete document from Veryfi inbox.
@@ -141,7 +116,6 @@ public struct VeryfiSDK {
     ///   - documentId: ID of document to delete.
     ///   - completion: completion description
     public func deleteDocument(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
-        let manager = NetworkManager(credentials: credentials)
-        manager.request(method: .DELETE, route: .documents, queryItems: [URLQueryItem(name: "id", value: documentId)], completion: completion)
+        self.request(method: .DELETE, route: .documents, queryItem: documentId, completion: completion)
     }
 }
