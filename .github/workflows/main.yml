@@ -1,7 +1,7 @@
 name: Veryfi-swift unit test
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -24,8 +24,18 @@ jobs:
           swift build
           swift test --enable-code-coverage
       
-      - name: check code coverage
+      - name: Generate badge
         run: |
           cd .github/metrics/
           python generate_badge.py
           cd ../../
+
+      - name: Commit Code Coverage Image to Repo
+        uses: EndBug/add-and-commit@v5
+        with:
+          author_name: Github actions
+          author_email: veryfi@veryfi.com
+          message: "Update report"
+          add: "./.github/metrics"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
