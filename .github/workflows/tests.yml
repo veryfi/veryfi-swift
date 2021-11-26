@@ -21,6 +21,7 @@ jobs:
       
       - name: Tests
         run: |
+          swift build
           swift test --enable-code-coverage
       
       - name: Generate badge
