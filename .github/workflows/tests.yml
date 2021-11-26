@@ -1,0 +1,30 @@
+name: Veryfi-swift unit test
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Install Swift
+        uses: sersoft-gmbh/swifty-linux-action@v1
+        width:
+          release-version: 5.5.x
+      
+      - name: Tests
+        run: |
+          swift test --enable-code-coverage
+      
+      - name: Generate badge
+        run: |
+          cd .github/metrics/
+          python generate_badge.py
+          cd ../../
