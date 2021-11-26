@@ -1,6 +1,7 @@
 import Foundation
-import FoundationNetworking
-
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
 
 struct VeryfiCredentials {
     let clientId: String

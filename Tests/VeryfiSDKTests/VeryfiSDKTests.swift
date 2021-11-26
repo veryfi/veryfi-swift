@@ -1,5 +1,7 @@
 import XCTest
-import FoundationNetworking
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
 @testable import VeryfiSDK
 
 let clientId = "clientId"
@@ -25,7 +27,7 @@ class ClientSpy: Client {
   override func processResponse(data: Data?, error: Error?, response: URLResponse?, completion: @escaping (Result<Data, APIError>) -> Void) {
     
     let url = Bundle.module.url(forResource: resource, withExtension: "json")!
-    let data = try? Data(contentsOf: URL(resolvingAliasFileAt: url))
+    let data = try? Data(contentsOf: url)
     completion(.success(data!))
   }
 }
@@ -112,11 +114,9 @@ final class VeryfiSDKTests: XCTestCase {
     let expectation = XCTestExpectation(description: "Get data from processing document")
 
     let url = Bundle.module.url(forResource: "receipt", withExtension: "jpeg")!
-    guard let fileData = try? Data(contentsOf: URL(resolvingAliasFileAt: url)) else {
-      return
-    }
+    let fileData = try? Data(contentsOf: url)
     let categories = ["Advertising & Marketing", "Automotive"]
-    client.processDocument(fileName: file, fileData: fileData, categories: categories, deleteAfterProcessing: true, withCompletion: { result in
+    client.processDocument(fileName: file, fileData: fileData!, categories: categories, deleteAfterProcessing: true, withCompletion: { result in
       switch result {
       case .success(let data):
         let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
