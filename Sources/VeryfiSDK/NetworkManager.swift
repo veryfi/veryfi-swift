@@ -1,7 +1,5 @@
 import Foundation
-#if canImport(FoundationNetworking)
-    import FoundationNetworking
-#endif
+import FoundationNetworking
 
 public enum APIError: Error {
     case internalError
