@@ -32,7 +32,6 @@ let package = Package(
                 .copy("Resources/getDocument.json"),
                 .copy("Resources/getDocuments.json"),
                 .copy("Resources/processDocument.json"),
-                .copy("Resources/processDocumentUrl.json"),
                 .copy("Resources/updateDocument.json")
             ]
         )
