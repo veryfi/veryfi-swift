@@ -1,4 +1,5 @@
 import XCTest
+import FoundationNetworking
 @testable import VeryfiSDK
 
 let clientId = "clientId"
