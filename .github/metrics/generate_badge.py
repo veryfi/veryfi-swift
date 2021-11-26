@@ -52,7 +52,7 @@ def get_color(number):
 def verify_unit_tests(number):
 
     if number < 0.9:
-        print("Code coverage < 90%")
+        print("Code coverage < 85%")
         exit(-1)
 
 
