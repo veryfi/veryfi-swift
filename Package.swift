@@ -4,12 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "veryfi-swift",
+    name: "VeryfiSDK",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "veryfi-swift",
-            targets: ["veryfi-swift"]),
+            name: "VeryfiSDK",
+            targets: ["VeryfiSDK"]
+        ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -19,10 +20,20 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "veryfi-swift",
-            dependencies: []),
+            name: "VeryfiSDK",
+            dependencies: []
+        ),
         .testTarget(
-            name: "veryfi-swiftTests",
-            dependencies: ["veryfi-swift"]),
+            name: "VeryfiSDKTests",
+            dependencies: ["VeryfiSDK"],
+            resources: [
+                .copy("Resources/receipt.jpeg"),
+                .copy("Resources/deleteDocument.json"),
+                .copy("Resources/getDocument.json"),
+                .copy("Resources/getDocuments.json"),
+                .copy("Resources/processDocument.json"),
+                .copy("Resources/updateDocument.json")
+            ]
+        )
     ]
 )

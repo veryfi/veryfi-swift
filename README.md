@@ -1,3 +1,3 @@
-# veryfi-swift
+# VeryfiSDK
 
-Swift package for communicating with the Veryfi OCR API
+A description of this package.
