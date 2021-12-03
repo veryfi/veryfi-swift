@@ -1,7 +1,7 @@
 ![Veryfi Logo](https://cdn.veryfi.com/logos/veryfi-logo-wide-github.png)
 
 ![Swift 5.3](https://img.shields.io/badge/Swift-5.3-orange.svg?style=flat)
-[![code coverage](./github/metrics/code_coverage.svg)](./github/metrics/code_coverage.svg)
+[![code coverage](.github/metrics/code_coverage.svg)](.github/metrics/code_coverage.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
