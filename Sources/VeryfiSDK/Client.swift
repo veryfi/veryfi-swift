@@ -10,7 +10,7 @@ struct VeryfiCredentials {
     let apiKey: String
 }
 
-class Client: NetworkManager {
+public class Client: NetworkManager {
     
     /// Init Client.
     /// - Parameters:
@@ -19,7 +19,7 @@ class Client: NetworkManager {
     ///   - username: Your username from veryfi-hub.
     ///   - apiKey: Your api key from veryfi-hub.
     ///   - apiVersion: Api version to use, by default "v8".
-    init(clientId: String, clientSecret: String, username: String, apiKey: String, apiVersion: String = "v8") {
+    public init(clientId: String, clientSecret: String, username: String, apiKey: String, apiVersion: String = "v8") {
         let credentials = VeryfiCredentials(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
         super.init(credentials: credentials, apiVersion: apiVersion)
     }

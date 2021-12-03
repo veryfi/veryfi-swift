@@ -20,7 +20,7 @@ enum Endpoint: String {
     case documents = "/partner/documents/"
 }
 
-class NetworkManager {
+public class NetworkManager {
     let credentials: VeryfiCredentials
     let apiVersion: String
     let baseUrl = "https://api.veryfi.com/api/"
