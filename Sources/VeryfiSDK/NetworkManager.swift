@@ -37,7 +37,7 @@ public class NetworkManager {
     
     private func getHeaders() -> [String:String] {
         let headers = [
-            "User-Agent": "Veryfi-Swift/0.0.1",
+            "User-Agent": "Veryfi-Swift/\(Constants.packageVersion)",
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Client-Id": self.credentials.clientId,

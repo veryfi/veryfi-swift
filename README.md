@@ -78,6 +78,12 @@ class ViewController: UIViewController {
 }
 ```
 
+## Release
+1. Change version in `Constants.swift`
+2. Commit changes and push to Github
+3. Tag your commit with the new version
+5. The new version will be accesible through Swift Package Manager
+
 ## Need help?
 If you run into any issue or need help installing or using the library, please contact support@veryfi.com.
 
