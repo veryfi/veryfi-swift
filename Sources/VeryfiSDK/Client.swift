@@ -1,6 +1,6 @@
 import Foundation
 #if canImport(FoundationNetworking)
-    import FoundationNetworking
+import FoundationNetworking
 #endif
 
 struct VeryfiCredentials {
@@ -116,12 +116,75 @@ public class Client: NetworkManager {
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         self.request(method: .PUT, route: .documents, body: jsonData, queryItem: documentId, completion: completion)
     }
-
+    
     /// Delete document from Veryfi inbox.
     /// - Parameters:
     ///   - documentId: ID of document to delete.
     ///   - completion: completion description
     public func deleteDocument(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
         self.request(method: .DELETE, route: .documents, queryItem: documentId, completion: completion)
+    }
+    
+    /// Get all line items from document.
+    /// - Parameters:
+    ///   - documentId: ID of document to get line items.
+    ///   - completion: Block executed after request.
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func getDocumentLineItems(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+        self.request(method: .GET, route: .documents, queryItem: String(format: "%@/line-items", documentId), completion: completion)
+    }
+    
+    /// Get single line item by document from Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId:  ID of document.
+    ///   - lineItemId:  ID of line item.
+    ///   - completion: Block executed after request.
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func getLineItem(documentId: String, lineItemId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+        self.request(method: .GET, route: .documents, queryItem: String(format: "%@/line-items/%@", documentId, lineItemId), completion: completion)
+    }
+    
+    /// Create line item for document in Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId: ID of document to modify.
+    ///   - params: Line item data.
+    ///   - completion: A block to execute
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func addLineItem(documentId: String, params: [String: Any], withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        self.request(method: .POST, route: .documents, body: jsonData, queryItem: String(format: "%@/line-items", documentId), completion: completion)
+    }
+    
+    /// Update line item for document in Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId: ID of document.
+    ///   - lineItemId: ID of line item to modify.
+    ///   - params: Line item data.
+    ///   - completion: A block to execute
+    ///   - detail: Response from server.
+    ///   - error: Error from server.
+    public func updateLineItem(documentId: String, lineItemId: String, params: [String: Any], withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+        let jsonData = try? JSONSerialization.data(withJSONObject: params)
+        self.request(method: .PUT, route: .documents, body: jsonData, queryItem: String(format: "%@/line-items/%@", documentId, lineItemId), completion: completion)
+    }
+    
+    /// Delete all line items from document from Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId: ID of document
+    ///   - completion: completion description
+    public func deleteDocumentLineItems(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+        self.request(method: .DELETE, route: .documents, queryItem: String(format: "%@/line-items", documentId), completion: completion)
+    }
+    
+    /// Delete  line item from document from Veryfi inbox.
+    /// - Parameters:
+    ///   - documentId: ID of document
+    ///   - lineItemId: ID of line item to delete.
+    ///   - completion: completion description
+    public func deleteLineItem(documentId: String, lineItemId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+        self.request(method: .DELETE, route: .documents, queryItem: String(format: "%@/line-items/%@", documentId, lineItemId), completion: completion)
     }
 }
