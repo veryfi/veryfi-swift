@@ -1,10 +1,3 @@
-//
-//  Extensions.swift
-//  
-//
-//  Created by Sebastian Giraldo on 8/04/22.
-//
-
 import Foundation
 extension Encodable {
     subscript(key: String) -> Any? {
