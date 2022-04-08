@@ -1,6 +1,6 @@
 import Foundation
 #if canImport(FoundationNetworking)
-    import FoundationNetworking
+import FoundationNetworking
 #endif
 
 struct VeryfiCredentials {
@@ -116,7 +116,7 @@ public class Client: NetworkManager {
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
         self.request(method: .PUT, route: .documents, body: jsonData, queryItem: documentId, completion: completion)
     }
-
+    
     /// Delete document from Veryfi inbox.
     /// - Parameters:
     ///   - documentId: ID of document to delete.
