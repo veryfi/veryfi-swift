@@ -3,7 +3,7 @@ name: Veryfi-swift unit test
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
 

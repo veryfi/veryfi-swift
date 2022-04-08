@@ -3,7 +3,7 @@ name: Veryfi-swift unit test
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
 
