@@ -32,7 +32,13 @@ let package = Package(
                 .copy("Resources/getDocument.json"),
                 .copy("Resources/getDocuments.json"),
                 .copy("Resources/processDocument.json"),
-                .copy("Resources/updateDocument.json")
+                .copy("Resources/updateDocument.json"),
+                .copy("Resources/addLineItem.json"),
+                .copy("Resources/deleteDocumentLineItems.json"),
+                .copy("Resources/deleteLineItem.json"),
+                .copy("Resources/getDocumentLineItems.json"),
+                .copy("Resources/getLineItem.json"),
+                .copy("Resources/updateLineItem.json")
             ]
         )
     ]

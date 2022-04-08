@@ -175,7 +175,7 @@ public class Client: NetworkManager {
     /// - Parameters:
     ///   - documentId: ID of document
     ///   - completion: completion description
-    public func deleteLineItem(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+    public func deleteDocumentLineItems(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
         self.request(method: .DELETE, route: .documents, queryItem: String(format: "%@/line-items", documentId), completion: completion)
     }
     

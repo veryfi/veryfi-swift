@@ -276,6 +276,230 @@ final class VeryfiSDKTests: XCTestCase {
         wait(for: [expectationDocuments, expectationDelete], timeout: 40.0)
     }
     
+    func testGetDocumentLineItems() {
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getDocumentLineItems")
+        }
+        
+        let expectation = XCTestExpectation(description: "Get all line items from document")
+        let documentId = 63480993
+        client.getDocumentLineItems(documentId: String(documentId), withCompletion: { result in
+            switch result {
+            case .success(let data):
+                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                XCTAssertNotNil(jsonResponse!["line_items"])
+            case .failure(let error):
+                print(error)
+                XCTAssertTrue(false)
+            }
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation], timeout: 20.0)
+    }
+    
+    func testGetLineItem() {
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getLineItem")
+        }
+        
+        let expectation = XCTestExpectation(description: "Get line item from document")
+        let documentId = 63480993
+        let lineItemId = 190399931
+        client.getLineItem(documentId: String(documentId), lineItemId: String(lineItemId), withCompletion: { result in
+            switch result {
+            case .success(let data):
+                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
+            case .failure(let error):
+                print(error)
+                XCTAssertTrue(false)
+            }
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation], timeout: 20.0)
+    }
+    
+    func testAddLineItem() {
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "addLineItem")
+        }
+        
+        let expectation = XCTestExpectation(description: "Add line item to document")
+        let documentId = 63480993
+        let params = ["order": 20,
+                      "description": "Test",
+                      "total": 44.4,
+                      "sku": "testsku"] as [String : Any]
+        client.addLineItem(documentId: String(documentId), params: params, withCompletion: { result in
+            switch result {
+            case .success(let data):
+                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                if mockResponses {
+                    XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
+                } else {
+                    XCTAssertEqual(jsonResponse!["total"] as? Float, params["total"] as? Float)
+                    XCTAssertEqual(jsonResponse!["description"] as? String, params["description"] as? String)
+                }
+            case .failure(let error):
+                print(error)
+                XCTFail()
+            }
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation], timeout: 20.0)
+    }
+    
+    func testUpdateLineItem() {
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "addLineItem")
+        }
+        
+        let expectation = XCTestExpectation(description: "Add line item to document")
+        let documentId = 63480993
+        let lineItemId = 190399931
+        let params = ["description": "Test"] as [String : Any]
+        client.updateLineItem(documentId: String(documentId), lineItemId: String(lineItemId), params: params, withCompletion: { result in
+            switch result {
+            case .success(let data):
+                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                if mockResponses {
+                    XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
+                } else {
+                    XCTAssertEqual(jsonResponse!["description"] as? String, params["description"] as? String)
+                }
+            case .failure(let error):
+                print(error)
+                XCTFail()
+            }
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation], timeout: 20.0)
+    }
+    
+    func testDeleteDocumentLineItems() {
+        let expectationDocuments = XCTestExpectation(description: "Get documents")
+        let expectationDelete = XCTestExpectation(description: "Get a JSON response from deleted document")
+        
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "deleteDocumentLineItems")
+            let documentId = 63480993
+            expectationDocuments.fulfill()
+            client.deleteDocumentLineItems(documentId: String(documentId), withCompletion: { result in
+                switch result {
+                case .success(let data):
+                    let jsonStringDeleteResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                    guard let status = jsonStringDeleteResponse?["status"] as? String else {
+                        XCTFail()
+                        return
+                    }
+                    XCTAssertEqual("ok", status)
+                case .failure(let error):
+                    print(error)
+                    XCTAssertTrue(false)
+                }
+                expectationDelete.fulfill()
+            })
+        } else {
+            client.processDocumentURL(fileUrl: url, withCompletion: { result in
+                switch result {
+                case .success(let data):
+                    let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                    guard let documentId = jsonResponse?["id"] as? Int64 else {
+                        XCTFail()
+                        return
+                    }
+                    client.deleteDocumentLineItems(documentId: String(documentId), withCompletion: { result in
+                        switch result {
+                        case .success(let data):
+                            let jsonStringDeleteResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                            guard let status = jsonStringDeleteResponse?["status"] as? String else {
+                                XCTFail()
+                                return
+                            }
+                            XCTAssertEqual("ok", status)
+                        case .failure(let error):
+                            print(error)
+                            XCTAssertTrue(false)
+                        }
+                        expectationDelete.fulfill()
+                    })
+                case .failure(let error):
+                    print(error)
+                }
+                expectationDocuments.fulfill()
+            })
+        }
+        
+        wait(for: [expectationDocuments, expectationDelete], timeout: 40.0)
+    }
+    
+    func testDeleteLineItem() {
+        let expectationDocuments = XCTestExpectation(description: "Get documents")
+        let expectationDelete = XCTestExpectation(description: "Get a JSON response from deleted document")
+        
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "deleteLineItem")
+            let documentId = 63480993
+            let lineItemId = 190399931
+            expectationDocuments.fulfill()
+            client.deleteLineItem(documentId: String(documentId), lineItemId: String(lineItemId), withCompletion: { result in
+                switch result {
+                case .success(let data):
+                    let jsonStringDeleteResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                    guard let status = jsonStringDeleteResponse?["status"] as? String else {
+                        XCTFail()
+                        return
+                    }
+                    XCTAssertEqual("ok", status)
+                case .failure(let error):
+                    print(error)
+                    XCTAssertTrue(false)
+                }
+                expectationDelete.fulfill()
+            })
+        } else {
+            let documentId = 63480993
+            let params = ["order": 20,
+                          "description": "Test",
+                          "total": 44.4,
+                          "sku": "testsku"] as [String : Any]
+            client.addLineItem(documentId: String(documentId), params: params, withCompletion: { result in
+                switch result {
+                case .success(let data):
+                    let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                    guard let lineItemId = jsonResponse?["id"] as? Int64 else {
+                        XCTFail()
+                        return
+                    }
+                    client.deleteLineItem(documentId: String(documentId), lineItemId: String(lineItemId), withCompletion: { result in
+                        switch result {
+                        case .success(let data):
+                            let jsonStringDeleteResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                            guard let status = jsonStringDeleteResponse?["status"] as? String else {
+                                XCTFail()
+                                return
+                            }
+                            XCTAssertEqual("ok", status)
+                        case .failure(let error):
+                            print(error)
+                            XCTAssertTrue(false)
+                        }
+                        expectationDelete.fulfill()
+                    })
+                case .failure(let error):
+                    print(error)
+                }
+                expectationDocuments.fulfill()
+            })
+        }
+        
+        wait(for: [expectationDocuments, expectationDelete], timeout: 40.0)
+    }
+    
     func testBadCredentials() {
         let expectation = XCTestExpectation(description: "Get response to a bad credential case")
         let badClient = Client(clientId: "badClientId", clientSecret: "badClientSecret", username: "badUsername", apiKey: "badApiKey")
