@@ -153,7 +153,7 @@ public class Client: NetworkManager {
     ///   - completion: A block to execute
     ///   - detail: Response from server.
     ///   - error: Error from server.
-    public func addLineItem(documentId: String, params: LineItem, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+    public func addLineItem(documentId: String, params: AddLineItem, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
         let jsonData = try? JSONSerialization.data(withJSONObject: params.dictionary)
         self.request(method: .POST, route: .documents, body: jsonData, queryItem: String(format: "%@/line-items", documentId), completion: completion)
     }
@@ -166,7 +166,7 @@ public class Client: NetworkManager {
     ///   - completion: A block to execute
     ///   - detail: Response from server.
     ///   - error: Error from server.
-    public func updateLineItem(documentId: String, lineItemId: String, params: LineItem, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
+    public func updateLineItem(documentId: String, lineItemId: String, params: UpdateLineItem, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
         let jsonData = try? JSONSerialization.data(withJSONObject: params.dictionary)
         self.request(method: .PUT, route: .documents, body: jsonData, queryItem: String(format: "%@/line-items/%@", documentId, lineItemId), completion: completion)
     }

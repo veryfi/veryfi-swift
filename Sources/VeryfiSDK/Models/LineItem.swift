@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LineItem: Encodable {
+public class LineItem {
     var sku: String?
     var category: String?
     var tax: Float?
@@ -22,7 +22,6 @@ public struct LineItem: Encodable {
     var hsn: String?
     var section: String?
     var weight: String?
-    var order: Int?
-    var description: String?
-    var total: Float?
+    
+    init(){}
 }
