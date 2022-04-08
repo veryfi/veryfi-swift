@@ -15,6 +15,12 @@ extension VeryfiSDKTests {
             ("testUpdateDocument", testUpdateDocument),
             ("testProcessDocumentURL", testProcessDocumentURL),
             ("testDeleteDocument", testDeleteDocument),
+            ("testGetDocumentLineItems", testGetDocumentLineItems)
+            ("testGetLineItem", testGetLineItem)
+            ("testAddLineItem", testAddLineItem)
+            ("testUpdateLineItem", testUpdateLineItem)
+            ("testDeleteDocumentLineItems", testDeleteDocumentLineItems)
+            ("testDeleteLineItem", testDeleteLineItem)
             ("testBadCredentials", testBadCredentials)
         ]
     }

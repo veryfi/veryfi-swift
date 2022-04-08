@@ -13,7 +13,6 @@ let url = "https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg"
 var client = Client(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
 let mockResponses = true
 
-
 class ClientSpy: Client {
     
     private var resource: String
@@ -29,7 +28,6 @@ class ClientSpy: Client {
         completion(.success(data!))
     }
 }
-
 
 final class VeryfiSDKTests: XCTestCase {
     
@@ -328,10 +326,8 @@ final class VeryfiSDKTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Add line item to document")
         let documentId = 63480993
-        let params = ["order": 20,
-                      "description": "Test",
-                      "total": 44.4,
-                      "sku": "testsku"] as [String : Any]
+        let params = AddLineItem(order: 20, description: "Test", total: 44.4)
+        params.sku = "testsku"
         client.addLineItem(documentId: String(documentId), params: params, withCompletion: { result in
             switch result {
             case .success(let data):
@@ -339,8 +335,8 @@ final class VeryfiSDKTests: XCTestCase {
                 if mockResponses {
                     XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
                 } else {
-                    XCTAssertEqual(jsonResponse!["total"] as? Float, params["total"] as? Float)
-                    XCTAssertEqual(jsonResponse!["description"] as? String, params["description"] as? String)
+                    XCTAssertEqual(jsonResponse!["total"] as? Float, params.total)
+                    XCTAssertEqual(jsonResponse!["description"] as? String, params.description)
                 }
             case .failure(let error):
                 print(error)
@@ -360,7 +356,8 @@ final class VeryfiSDKTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Add line item to document")
         let documentId = 63480993
         let lineItemId = 190399931
-        let params = ["description": "Test"] as [String : Any]
+        let params = UpdateLineItem()
+        params.description = "Test"
         client.updateLineItem(documentId: String(documentId), lineItemId: String(lineItemId), params: params, withCompletion: { result in
             switch result {
             case .success(let data):
@@ -368,7 +365,7 @@ final class VeryfiSDKTests: XCTestCase {
                 if mockResponses {
                     XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
                 } else {
-                    XCTAssertEqual(jsonResponse!["description"] as? String, params["description"] as? String)
+                    XCTAssertEqual(jsonResponse!["description"] as? String, params.description)
                 }
             case .failure(let error):
                 print(error)
@@ -463,10 +460,8 @@ final class VeryfiSDKTests: XCTestCase {
             })
         } else {
             let documentId = 63480993
-            let params = ["order": 20,
-                          "description": "Test",
-                          "total": 44.4,
-                          "sku": "testsku"] as [String : Any]
+            let params = AddLineItem(order: 20, description: "Test", total: 44.4)
+            params.sku = "testsku"
             client.addLineItem(documentId: String(documentId), params: params, withCompletion: { result in
                 switch result {
                 case .success(let data):
