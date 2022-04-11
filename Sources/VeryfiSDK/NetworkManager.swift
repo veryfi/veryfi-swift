@@ -20,6 +20,7 @@ enum Endpoint: String {
     case documents = "/partner/documents/"
 }
 
+/// Base networking class to make API calls to the Veyfi API.
 public class NetworkManager {
     let credentials: VeryfiCredentials
     let apiVersion: String

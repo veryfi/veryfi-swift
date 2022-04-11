@@ -13,7 +13,7 @@ Install from Swift Package Manager, using this repository as the url.
 If you don't have an account with Veryfi, please go ahead and register here: [https://hub.veryfi.com/signup/api/](https://hub.veryfi.com/signup/api/)
 
 ### Veryfi Swift Client Library
-The **veryfi** library can be used to communicate with Veryfi API. All available functionality is described here: https://veryfi.github.io/veryfi-swift/
+The **veryfi** library can be used to communicate with Veryfi API. All available functionality is described here: https://veryfi.github.io/veryfi-swift/documentation/veryfisdk/
 
 Below is the sample Swift code using **veryfi** to OCR and extract data from a document:
 

@@ -1,5 +1,6 @@
 import Foundation
 
+/// Base model used by the AddLineItem and UpdateLineItem models.
 public class LineItem {
     var sku: String?
     var category: String?

@@ -10,6 +10,7 @@ struct VeryfiCredentials {
     let apiKey: String
 }
 
+/// Client used to expose the functions to communicate with the Veyfi API.
 public class Client: NetworkManager {
     
     /// Init Client.
