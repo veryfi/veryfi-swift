@@ -53,6 +53,28 @@ final class VeryfiSDKTests: XCTestCase {
         wait(for: [expectation], timeout: 20.0)
     }
     
+    func testGetDocumentWithQueryItems() {
+        if (mockResponses) {
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getDocuments")
+        }
+        
+        let expectation = XCTestExpectation(description: "Get all documents in a JSON array")
+        let queryItems = [URLQueryItem(name: "order_by", value: "created")]
+        client.getDocuments(queryItems: queryItems, withCompletion: { result in
+            switch result {
+            case .success(let data):
+                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
+            case .failure(let error):
+                print(error)
+                XCTAssertTrue(false)
+            }
+            expectation.fulfill()
+        })
+        
+        wait(for: [expectation], timeout: 20.0)
+    }
+    
     func testGetDocument() {
         let expectation = XCTestExpectation(description: "Get a document by id in a JSON")
         
@@ -326,7 +348,7 @@ final class VeryfiSDKTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Add line item to document")
         let documentId = 63480993
-        let params = AddLineItem(order: 20, description: "Test", total: 44.4)
+        let params = AddLineItem(order: 20, description: "Test", total: 44.0)
         params.sku = "testsku"
         client.addLineItem(documentId: String(documentId), params: params, withCompletion: { result in
             switch result {
@@ -353,28 +375,48 @@ final class VeryfiSDKTests: XCTestCase {
             client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "addLineItem")
         }
         
-        let expectation = XCTestExpectation(description: "Add line item to document")
+        let expectation1 = XCTestExpectation(description: "Add line item to document")
         let documentId = 63480993
-        let lineItemId = 190399931
-        let params = UpdateLineItem()
-        params.description = "Test"
-        client.updateLineItem(documentId: String(documentId), lineItemId: String(lineItemId), params: params, withCompletion: { result in
+        var lineItemId = 0
+        let params1 = AddLineItem(order: 20, description: "Test", total: 44.0)
+        params1.sku = "testsku"
+        client.addLineItem(documentId: String(documentId), params: params1, withCompletion: { result in
             switch result {
             case .success(let data):
                 let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
                 if mockResponses {
                     XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
                 } else {
-                    XCTAssertEqual(jsonResponse!["description"] as? String, params.description)
+                    lineItemId = jsonResponse!["id"] as? Int ?? 0
                 }
             case .failure(let error):
                 print(error)
                 XCTFail()
             }
-            expectation.fulfill()
+            expectation1.fulfill()
+        })
+        wait(for: [expectation1], timeout: 20.0)
+        
+        let expectation2 = XCTestExpectation(description: "Update line item to document")
+        let params2 = UpdateLineItem()
+        params2.description = "Test"
+        client.updateLineItem(documentId: String(documentId), lineItemId: String(lineItemId), params: params2, withCompletion: { result in
+            switch result {
+            case .success(let data):
+                let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
+                if mockResponses {
+                    XCTAssertGreaterThanOrEqual(jsonResponse!.count, 2)
+                } else {
+                    XCTAssertEqual(jsonResponse!["description"] as? String, params2.description)
+                }
+            case .failure(let error):
+                print(error)
+                XCTFail()
+            }
+            expectation2.fulfill()
         })
         
-        wait(for: [expectation], timeout: 20.0)
+        wait(for: [expectation2], timeout: 20.0)
     }
     
     func testDeleteDocumentLineItems() {

@@ -52,7 +52,12 @@ public class NetworkManager {
         if let queryItem = queryItem, queryItem != "" {
             apiUrl = apiUrl + queryItem + "/"
         }
-        guard let url = URL(string: apiUrl) else {
+        var urlComponents = URLComponents(string: apiUrl)
+        if let queryItems = queryItems, !queryItems.isEmpty {
+            urlComponents?.queryItems = queryItems
+        }
+        
+        guard let url = urlComponents?.url else {
             completion(.failure(.internalError))
             return
         }
