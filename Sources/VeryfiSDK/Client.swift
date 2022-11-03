@@ -26,6 +26,7 @@ public class Client: NetworkManager {
     
     /// Get all documents from Veryfi inbox.
     /// - Parameters:
+    ///   - queryItems: Query items to apply to the get request.
     ///   - completion: Block executed after request.
     ///   - detail: Response from server.
     ///   - error: Error from server.
