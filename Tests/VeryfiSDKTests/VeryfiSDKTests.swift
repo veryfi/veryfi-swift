@@ -9,7 +9,7 @@ let clientSecret = "clientSecret"
 let username = "username"
 let apiKey = "apiKey"
 let file = "receipt.jpeg"
-let url = "https://veryfi-testing-public.s3.us-west-2.amazonaws.com/receipt.jpg"
+let url = "https://cdn.veryfi.com/receipts/fd36b2c0-a84d-459c-9d57-c29ac5d14685/21c95fc5-0e5c-48f8-abe0-849e438296bf.jpeg"
 var client = Client(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
 let mockResponses = true
 
@@ -148,7 +148,7 @@ final class VeryfiSDKTests: XCTestCase {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual("In-n-out Burger", vendor)
+                XCTAssertEqual("Walgreens", vendor)
             case .failure(let error):
                 print(error)
                 XCTFail()
@@ -156,7 +156,7 @@ final class VeryfiSDKTests: XCTestCase {
             expectation.fulfill()
         })
         
-        wait(for: [expectation], timeout: 20.0)
+        wait(for: [expectation], timeout: 60.0)
     }
     
     func testUpdateDocument() {
@@ -228,7 +228,7 @@ final class VeryfiSDKTests: XCTestCase {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual("In-n-out Burger", vendor)
+                XCTAssertEqual("Walgreens", vendor)
             case .failure(let error):
                 print(error)
                 XCTFail()
