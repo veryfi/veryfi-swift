@@ -18,6 +18,8 @@ enum Method: String {
 
 enum Endpoint: String {
     case documents = "/partner/documents/"
+    case anyDocuments = "/partner/any-documents/"
+    case bankStatements = "/partner/bank-statements/"
 }
 
 public class NetworkManager {
