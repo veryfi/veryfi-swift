@@ -1,5 +1,5 @@
 //
-//  ProcessW2.swift
+//  ProcessW8BenE.swift
 //  VeryfiSDK
 //
 //  Created by Veryfi on 25/10/24.
@@ -7,7 +7,7 @@
 import Foundation
 
 extension Client {
-    /// Upload a w2 image for the Veryfi API to process.
+    /// Upload a w8BenE image for the Veryfi API to process.
     /// - Parameters:
     ///     - fileName: Name of the file to upload to the Veryfi API.
     ///     - fileData: UTF8 encoded file data
@@ -15,7 +15,7 @@ extension Client {
     ///     - completion: Function called after request completes.
     ///     -  detail: Response from server.
     ///     -  error: Error from server.
-    public func processW2(fileName: String,
+    public func processW8BenE(fileName: String,
                                 fileData: Data,
                                 params: [String: Any]? = nil,
                                 withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
@@ -28,6 +28,6 @@ extension Client {
             return
         }
 
-        self.request(method: .POST, route: .w2s, uploadData: jsonData, completion: completion)
+        self.request(method: .POST, route: .w8BenE, uploadData: jsonData, completion: completion)
     }
 }
