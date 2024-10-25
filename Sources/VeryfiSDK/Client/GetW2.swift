@@ -7,13 +7,13 @@
 import Foundation
 
 extension Client {
-    /// Get single document by ID from Veryfi inbox.
+    /// Get single w2 document by ID from Veryfi inbox.
     /// - Parameters:
     ///   - documentId:  ID of document to retreive
     ///   - completion: Block executed after request.
     ///   - detail: Response from server.
     ///   - error: Error from server.
     public func getW2(documentId: String, withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
-        self.request(method: .GET, route: .documents, queryItem: documentId, completion: completion)
+        self.request(method: .GET, route: .w2s, queryItem: documentId, completion: completion)
     }
 }

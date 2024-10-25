@@ -30,6 +30,7 @@ let package = Package(
                 .copy("Resources/receipt.jpeg"),
                 .copy("Resources/driver_license.png"),
                 .copy("Resources/bankstatement.pdf"),
+                .copy("Resources/w2.png"),
                 .copy("Resources/deleteDocument.json"),
                 .copy("Resources/getDocument.json"),
                 .copy("Resources/getDocuments.json"),

@@ -12,6 +12,7 @@ let file = "receipt.jpeg"
 let url = "https://cdn.veryfi.com/receipts/fd36b2c0-a84d-459c-9d57-c29ac5d14685/21c95fc5-0e5c-48f8-abe0-849e438296bf.jpeg"
 let driverLicenseUrl = "https://cdn-dev.veryfi.com/testing/veryfi-python/driver_license.png"
 let bankStatementUrl = "https://cdn-dev.veryfi.com/testing/veryfi-python/bankstatement.pdf"
+let w2Url = "https://cdn.veryfi.com/wp-content/uploads/image.png"
 var client = Client(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
 let mockResponses = true
 

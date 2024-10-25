@@ -7,21 +7,21 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testProcessW2URL() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "processDocument")
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "processW2")
         }
 
-        let expectation = XCTestExpectation(description: "Get a JSON response from process document")
+        let expectation = XCTestExpectation(description: "Get a JSON response from process a w2 document")
 
-        let categories = ["Advertising & Marketing", "Automotive"]
-        client.processDocumentURL(fileUrl: url, categories: categories, deleteAfterProcessing: true, boostMode: 1, withCompletion: { result in
+        client.processW2URL(fileUrl: w2Url, withCompletion: { result in
             switch result {
             case .success(let data):
                 let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary
-                guard let vendor = (jsonResponse?["vendor"] as? NSDictionary)?["name"] as? String else {
+                guard let employerName = jsonResponse?["employer_name"] as? String else {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual("Walgreens", vendor)
+
+                XCTAssertEqual("The Big Company", employerName)
             case .failure(let error):
                 print(error)
                 XCTFail()

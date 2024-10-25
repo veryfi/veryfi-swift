@@ -11,11 +11,7 @@ extension Client {
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.
-    ///   - categories: List of document categories.
-    ///   - deleteAfterProcessing: Do not store file in Veryfi's inbox.
-    ///   - boostMode: Skip data enrichment but process document faster.
-    ///   - externalId: Existing ID to assign to document.
-    ///   - maxPagesToProcess: Number of pages to process.
+    ///   - confidenceDetails: Confidence details object
     ///   - completion: Block executed after request.
     ///   - detail: Response from server.
     ///   - error: Error from server.

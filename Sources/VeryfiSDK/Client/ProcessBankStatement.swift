@@ -11,8 +11,7 @@ extension Client {
     /// - Parameters:
     ///     - fileName: Name of the file to upload to the Veryfi API.
     ///     - fileData: UTF8 encoded file data
-    ///     - categories: List of document categories.
-    ///     - deleteAfterProcessing: Do not store file in Veryfi's inbox.
+    ///     - confidenceDetails: Confidence details object
     ///     - params: Additional parameters.
     ///     - completion: Function called after request completes.
     ///     -  detail: Response from server.

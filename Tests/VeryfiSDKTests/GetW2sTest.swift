@@ -7,12 +7,12 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testGetW2s() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getDocuments")
+            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getW2s")
         }
 
-        let expectation = XCTestExpectation(description: "Get all documents in a JSON array")
+        let expectation = XCTestExpectation(description: "Get all w2 documents in a JSON array")
 
-        client.getDocuments(withCompletion: { result in
+        client.getW2s(withCompletion: { result in
             switch result {
             case .success(let data):
                 let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary

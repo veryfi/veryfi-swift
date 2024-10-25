@@ -7,7 +7,7 @@
 import Foundation
 
 extension Client {
-    /// Upload document to Veryfi API with URL.
+    /// Upload w2 document to Veryfi API with URL.
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.
@@ -21,20 +21,12 @@ extension Client {
     ///   - error: Error from server.
     public func processW2URL(fileUrl: String? = nil,
                                    fileUrls: [String]? = nil,
-                                   categories: [String]? = nil,
-                                   deleteAfterProcessing: Bool = false,
-                                   boostMode: Int = 0,
-                                   externalId: String? = nil,
-                                   maxPagesToProcess: Int? = 1,
                                    withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
-        let params: [String: Any] = ["auto_delete": deleteAfterProcessing,
-                                     "boost_mode": boostMode,
-                                     "categories": categories ?? [],
-                                     "external_id": externalId as Any, //implicit coerce
-                                     "file_url": fileUrl as Any, //implicit coerce
-                                     "file_urls": fileUrls as Any, //implicit coerce
-                                     "max_pages_to_process": maxPagesToProcess as Any] //implicit coerce
+        let params: [String: Any] = [
+            "file_url": fileUrl as Any, //implicit coerce
+            "file_urls": fileUrls as Any, //implicit coerce
+        ] //implicit coerce
         let jsonData = try? JSONSerialization.data(withJSONObject: params)
-        self.request(method: .POST, route: .documents, body: jsonData, completion: completion)
+        self.request(method: .POST, route: .w2s, body: jsonData, completion: completion)
     }
 }
