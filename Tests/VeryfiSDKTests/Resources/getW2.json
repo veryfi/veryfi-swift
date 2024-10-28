@@ -1,0 +1,61 @@
+{
+  "pdf_url": "https://scdn.veryfi.com/w2s/919ba4778c039560/431b3596-5734-4b7c-a250-ec953d379a46/514ae5d8-59aa-4d57-92a4-4bea0facd86a.pdf?Expires=1729886718&Signature=W99pSvYLd9DLDCNCZSvcuE-~0VZhMQm~R5yecMpy0WvDSkpNZWd9t3ltQS51S1KIF8YYsZVB-Dz15PZsrQfyOiN3dFQMHJzrgbAgwi~cofMo7QgHa8oML0LAD7LvpXqG5ldKRlpfvsCTqKv99L2nuXM7xFE9NbitwqSCB3BVuwdqFbWGTLRqmdMWDBWs1hOLF~5bpjWt2ssZ7rreWgbhCwyMiLj59GUlI4MN43zd~9T0akSOHvX0AYn70eZ3FF~FWQtydgIyQxwtyKd4CCwSUtPkywFIPnPF57WQ03hDfJbhjgXwBBNPMNGmijEwoVT33Uqnco-6Nq6y3tkea6GSbA__&Key-Pair-Id=APKAJCILBXEJFZF4DCHQ",
+  "id": 4609400,
+  "external_id": null,
+  "created_date": "2024-10-09 21:14:48",
+  "updated_date": "2024-10-09 21:14:48",
+  "img_thumbnail_url": "https://scdn.veryfi.com/w2s/919ba4778c039560/431b3596-5734-4b7c-a250-ec953d379a46/thumbnail.jpg?Expires=1729886718&Signature=Fy7ax21F69vBku3HIoW1mjvTaAQ2C-hhxA5vOiFTCrb1BNRkgLKg5N-~-6c5miUWYKt2UoaiLGlLfxxQ~ub-O-T2WdGah6vTf3BITAzgLHPS04HzOdoJMzPKMQ5zTI8SjlYSTRpHRStHjkZ3mEXUp3oQ~XjB~V5T-vpTaLO7HTF2JDdZOuxpgbI88iyJKKPV4WASKM4TAOZBICSVLjEdzd9nS5Jjw4nwV~UYRbRKQ0la0YXmeGh0s3BzVniH1kkzwsFHZLQ9Z3RAzEQY-7etLbjZBJ75SG-PvoGxmuCbnUs7d-vyyJDLxl3Oy3kazJUc0Jev~3ntJWIOA7kgiY1nRw__&Key-Pair-Id=APKAJCILBXEJFZF4DCHQ",
+  "advance_eic_payment": null,
+  "employee_ssn": "123-45-6879",
+  "ein": "46-1234567",
+  "employer_name": "BESTEST HOSPITAL EVER, INC.",
+  "employer_address": "123 PAYNE LANE\nPOSTCALL, NY 11111",
+  "control_number": null,
+  "employee_name": "DOCTORED B. MONEY",
+  "employee_address": "80 WORKHOURS WAY\nSLEEPLESS HOLLOW, NY 11222",
+  "wages_other_comps": 55000.0,
+  "federal_income_tax": 4000.0,
+  "ss_wages": 60000.0,
+  "ss_tax": 3720.0,
+  "medicare_wages": 60000.0,
+  "medicare_tax": 870.0,
+  "ss_tips": null,
+  "allocated_tips": null,
+  "dependent_care_benefits": null,
+  "non_qualified_plans": null,
+  "state": "NY",
+  "employer_state_id": null,
+  "state_wages_tips": 60000.0,
+  "state_income_tax": 1500.0,
+  "local_wages_tips": 60000.0,
+  "local_income_tax": 500.0,
+  "locality_name": "NYC",
+  "field_12a_col1": null,
+  "field_12a_col2": 45.5,
+  "field_12b_col1": "E",
+  "field_12b_col2": 5000.0,
+  "field_12c_col1": "DD",
+  "field_12c_col2": 9800.57,
+  "field_12d_col1": null,
+  "field_12d_col2": null,
+  "is_13a": false,
+  "is_13b": true,
+  "is_13c": false,
+  "states": [
+    {
+      "state": "NY",
+      "employer_state_id": null,
+      "state_wages_tips": 60000.0,
+      "state_income_tax": 1500.0,
+      "local_wages_tips": 60000.0,
+      "local_income_tax": 500.0,
+      "locality_name": "NYC"
+    }
+  ],
+  "field_14_other": [
+    {
+      "column_1": "NY SDI",
+      "column_2": 31.2
+    }
+  ]
+}
