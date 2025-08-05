@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get single w2 document by ID from Veryfi inbox.
+    /// https://docs.veryfi.com/api/w2s/get-a-w-2/
     /// - Parameters:
     ///   - documentId:  ID of document to retreive
     ///   - completion: Block executed after request.

@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testGetDocuments() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getDocuments")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "getDocuments")
         }
 
         let expectation = XCTestExpectation(description: "Get all documents in a JSON array")

@@ -31,6 +31,8 @@ let package = Package(
                 .copy("Resources/driver_license.png"),
                 .copy("Resources/bankstatement.pdf"),
                 .copy("Resources/w2.png"),
+                .copy("Resources/split.pdf"),
+                .copy("Resources/check.pdf"),
                 .copy("Resources/deleteDocument.json"),
                 .copy("Resources/getDocument.json"),
                 .copy("Resources/getDocuments.json"),
@@ -53,7 +55,15 @@ let package = Package(
                 .copy("Resources/deleteLineItem.json"),
                 .copy("Resources/getDocumentLineItems.json"),
                 .copy("Resources/getLineItem.json"),
-                .copy("Resources/updateLineItem.json")
+                .copy("Resources/updateLineItem.json"),
+                .copy("Resources/classify.json"),
+                .copy("Resources/split.json"),
+                .copy("Resources/getSplit.json"),
+                .copy("Resources/getSplits.json"),
+                .copy("Resources/processCheck.json"),
+                .copy("Resources/getCheck.json"),
+                .copy("Resources/getChecks.json"),
+                .copy("Resources/deleteCheck.json")
             ]
         )
     ]

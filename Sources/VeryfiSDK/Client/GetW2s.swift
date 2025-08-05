@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get all w2 documents from Veryfi inbox.
+    /// https://docs.veryfi.com/api/w2s/get-w-2-s/
     /// - Parameters:
     ///   - queryItems: Query items to apply to the get request.
     ///   - completion: Block executed after request.

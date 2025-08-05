@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload w8BenE document to Veryfi API with URL.
+    /// https://docs.veryfi.com/api/w-8ben-e/process-a-w-8-ben-e/
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.

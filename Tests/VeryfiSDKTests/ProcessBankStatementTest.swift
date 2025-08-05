@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testProcessBankStatement() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "processBankStatement")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "processBankStatement")
         }
 
         let expectation = XCTestExpectation(description: "Get data from processing bank statement")

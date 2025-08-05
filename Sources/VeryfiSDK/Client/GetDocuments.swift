@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get all documents from Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/search-documents/
     /// - Parameters:
     ///   - queryItems: Query items to apply to the get request.
     ///   - completion: Block executed after request.

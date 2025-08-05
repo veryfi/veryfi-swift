@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get single document by ID from Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/get-a-document/
     /// - Parameters:
     ///   - documentId:  ID of document to retreive
     ///   - completion: Block executed after request.

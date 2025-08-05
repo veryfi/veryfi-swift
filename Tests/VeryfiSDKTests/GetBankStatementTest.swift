@@ -9,7 +9,7 @@ extension VeryfiSDKTests {
         let expectation = XCTestExpectation(description: "Get a bank statement by id in a JSON")
 
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getBankStatement")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "getBankStatement")
             let id = Int64(4560116)
             client.getBankStatement(id: String(id), withCompletion: { result in
                 switch result {

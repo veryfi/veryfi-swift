@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testGetBankStatements() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getBankStatements")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "getBankStatements")
         }
 
         let expectation = XCTestExpectation(description: "Get all bank statements in a JSON array")

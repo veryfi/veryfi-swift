@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testAddTags() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "addTags")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "addTags")
         }
 
         let expectation = XCTestExpectation(description: "Get a JSON response from add tags")

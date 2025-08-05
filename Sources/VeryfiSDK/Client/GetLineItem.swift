@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get single line item by document from Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/get-a-line-item/
     /// - Parameters:
     ///   - documentId:  ID of document.
     ///   - lineItemId:  ID of line item.

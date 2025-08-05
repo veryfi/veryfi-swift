@@ -9,7 +9,7 @@ extension VeryfiSDKTests {
         let expectation = XCTestExpectation(description: "Get a w2 document by id in a JSON")
 
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getW2")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "getW2")
             let id = Int64(4609400)
             client.getW2(documentId: String(id), withCompletion: { result in
                 switch result {

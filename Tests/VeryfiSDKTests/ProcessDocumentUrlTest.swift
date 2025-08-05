@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testProcessDocumentURL() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "processDocument")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "processDocument")
         }
 
         let expectation = XCTestExpectation(description: "Get a JSON response from process document")

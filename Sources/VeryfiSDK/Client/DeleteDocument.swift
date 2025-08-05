@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Delete document from Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/delete-a-document/
     /// - Parameters:
     ///   - documentId: ID of document to delete.
     ///   - completion: completion description

@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get single any document by ID from Veryfi inbox.
+    /// https://docs.veryfi.com/api/anydocs/get-a-A-doc/
     /// - Parameters:
     ///   - documentId:  ID of document to retreive
     ///   - completion: Block executed after request.

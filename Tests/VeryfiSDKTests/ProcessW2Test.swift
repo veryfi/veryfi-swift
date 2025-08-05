@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testProcessW2() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "processW2")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "processW2")
         }
 
         let expectation = XCTestExpectation(description: "Get data from processing a w2 document")

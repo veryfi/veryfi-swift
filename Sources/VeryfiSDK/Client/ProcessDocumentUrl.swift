@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload document to Veryfi API with URL.
+    /// https://docs.veryfi.com/api/receipts-invoices/process-a-document/
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.

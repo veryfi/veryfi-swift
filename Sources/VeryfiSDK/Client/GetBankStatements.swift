@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get all bank statements from Veryfi inbox.
+    /// https://docs.veryfi.com/api/bank-statements/get-bank-statements/
     /// - Parameters:
     ///   - queryItems: Query items to apply to the get request.
     ///   - completion: Block executed after request.

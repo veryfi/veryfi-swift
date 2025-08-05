@@ -19,7 +19,7 @@ extension VeryfiSDKTests {
             ("testProcessAnyDocumentURL", testProcessAnyDocumentURL),
             ("testGetBankStatements", testGetBankStatements),
             ("testGetBankStatement", testGetBankStatement),
-            ("testProcessBankStatement" testProcessBankStatement),
+            ("testProcessBankStatement", testProcessBankStatement),
             ("testProcessBankStatementURL", testProcessBankStatementURL),
             ("testGetW2s", testGetW2s),
             ("testGetW2", testGetW2),
@@ -29,13 +29,24 @@ extension VeryfiSDKTests {
             ("testAddTags", testAddTags),
             ("testUpdateDocument", testUpdateDocument),
             ("testDeleteDocument", testDeleteDocument),
-            ("testGetDocumentLineItems", testGetDocumentLineItems)
-            ("testGetLineItem", testGetLineItem)
-            ("testAddLineItem", testAddLineItem)
-            ("testUpdateLineItem", testUpdateLineItem)
-            ("testDeleteDocumentLineItems", testDeleteDocumentLineItems)
-            ("testDeleteLineItem", testDeleteLineItem)
-            ("testBadCredentials", testBadCredentials)
+            ("testGetDocumentLineItems", testGetDocumentLineItems),
+            ("testGetLineItem", testGetLineItem),
+            ("testAddLineItem", testAddLineItem),
+            ("testUpdateLineItem", testUpdateLineItem),
+            ("testDeleteDocumentLineItems", testDeleteDocumentLineItems),
+            ("testDeleteLineItem", testDeleteLineItem),
+            ("testBadCredentials", testBadCredentials),
+            ("testClassifyDocument", testClassifyDocument),
+            ("testClassifyDocumentURL", testClassifyDocumentURL),
+            ("testSplitDocument", testSplitDocument),
+            ("testSplitDocumentURL", testSplitDocumentURL),
+            ("testGetSplitDocument", testGetSplitDocument),
+            ("testGetSplitDocuments", testGetSplitDocuments),
+            ("testProcessCheck", testProcessCheck),
+            ("testProcessCheckURL", testProcessCheckURL),
+            ("testGetCheck", testGetCheck),
+            ("testGetChecks", testGetChecks),
+            ("testDeleteCheck", testDeleteCheck)
         ]
     }
 }

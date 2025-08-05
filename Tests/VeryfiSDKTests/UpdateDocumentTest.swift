@@ -9,7 +9,7 @@ extension VeryfiSDKTests {
         let expectation = XCTestExpectation(description: "Get data from update document")
 
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "updateDocument")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "updateDocument")
             let updateNotes = ["notes": "Note updated"]
             let id = 31727276
             client.updateDocument(documentId: String(id), params: updateNotes, withCompletion: { result in

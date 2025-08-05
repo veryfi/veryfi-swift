@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get all line items from document.
+    /// https://docs.veryfi.com/api/receipts-invoices/get-document-line-items/
     /// - Parameters:
     ///   - documentId: ID of document to get line items.
     ///   - completion: Block executed after request.
