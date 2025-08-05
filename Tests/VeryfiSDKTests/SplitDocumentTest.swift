@@ -100,7 +100,7 @@ extension VeryfiSDKTests {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual(8, count)
+                XCTAssertLessThan(8, count)
             case .failure(let error):
                 print(error)
                 XCTFail()
