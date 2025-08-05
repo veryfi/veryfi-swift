@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload w9 document to Veryfi API with URL.
+    /// https://docs.veryfi.com/api/w9s/process-a-w-9/
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.

@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Classify a document and extract all the fields from it.
+    /// https://docs.veryfi.com/api/classify/classify-a-document/
     /// - Parameters:
     ///   - fileName: Name of the file to upload to the Veryfi API.
     ///   - fileData: UTF8 encoded file data

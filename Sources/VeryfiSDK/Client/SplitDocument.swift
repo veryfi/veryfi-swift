@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Split a document into multiple documents.
+    /// https://docs.veryfi.com/api/receipts-invoices/split-and-process-a-pdf/
     /// - Parameters:
     ///   - fileName: Name of the file to upload to the Veryfi API.
     ///   - fileData: UTF8 encoded file data
@@ -32,6 +33,7 @@ extension Client {
     }
     
     /// Split a document from URL into multiple documents.
+    /// https://docs.veryfi.com/api/receipts-invoices/split-and-process-a-pdf////
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.
@@ -56,6 +58,7 @@ extension Client {
     }
     
     /// Get a specific split document by ID.
+    /// https://docs.veryfi.com/api/receipts-invoices/get-documents-from-pdf/
     /// - Parameters:
     ///   - splitId: The ID of the split document to retrieve.
     ///   - completion: Function called after request completes.
@@ -67,6 +70,7 @@ extension Client {
     }
     
     /// Get all split documents.
+    /// https://docs.veryfi.com/api/receipts-invoices/get-submitted-pdf/
     /// - Parameters:
     ///   - completion: Function called after request completes.
     ///   - detail: Response from server.

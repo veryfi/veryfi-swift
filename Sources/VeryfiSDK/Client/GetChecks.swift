@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get all checks from Veryfi inbox.
+    /// https://docs.veryfi.com/api/checks/get-checks/
     /// - Parameters:
     ///   - queryItems: Query items to apply to the get request.
     ///   - completion: Block executed after request.

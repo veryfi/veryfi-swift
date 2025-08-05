@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Add tag to document.
+    /// https://docs.veryfi.com/api/receipts-invoices/add-a-tag-to-a-document/
     /// - Parameters:
     ///   - documentId: ID of document to add tag.
     ///   - params: Tag data.

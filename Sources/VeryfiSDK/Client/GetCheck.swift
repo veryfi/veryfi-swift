@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get a specific check by ID.
+    /// https://docs.veryfi.com/api/checks/get-a-check/
     /// - Parameters:
     ///   - checkId: The ID of the check to retrieve.
     ///   - completion: Block executed after request.

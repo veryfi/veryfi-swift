@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload w2 document to Veryfi API with URL.
+    /// https://docs.veryfi.com/api/w2s/process-a-w-2/
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.

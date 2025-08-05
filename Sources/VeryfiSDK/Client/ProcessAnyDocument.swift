@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload any document for the Veryfi API to process.
+    /// https://docs.veryfi.com/api/anydocs/process-a-A-doc/
     /// - Parameters:
     ///     - fileName: Name of the file to upload to the Veryfi API.
     ///     - fileData: UTF8 encoded file data

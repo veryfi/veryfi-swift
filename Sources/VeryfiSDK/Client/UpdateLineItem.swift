@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Update line item for document in Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/update-a-line-item/
     /// - Parameters:
     ///   - documentId: ID of document.
     ///   - lineItemId: ID of line item to modify.

@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Create line item for document in Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/create-a-line-item/
     /// - Parameters:
     ///   - documentId: ID of document to modify.
     ///   - params: Line item data.

@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload  a bank statement for the Veryfi API to process.
+    /// https://docs.veryfi.com/api/bank-statements/process-a-bank-statement/
     /// - Parameters:
     ///     - fileName: Name of the file to upload to the Veryfi API.
     ///     - fileData: UTF8 encoded file data

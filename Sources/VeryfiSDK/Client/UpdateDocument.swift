@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Update information of document in Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/update-a-document/
     /// - Parameters:
     ///   - documentId: ID of document to modify.
     ///   - params: Names and values to modify.

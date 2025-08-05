@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get single w8BenE document by ID from Veryfi inbox.
+    /// https://docs.veryfi.com/api/w-8ben-e/get-a-w-8-ben-e/
     /// - Parameters:
     ///   - documentId:  ID of document to retreive
     ///   - completion: Block executed after request.

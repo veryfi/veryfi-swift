@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Get single bank statements by ID from Veryfi inbox.
+    /// https://docs.veryfi.com/api/bank-statements/get-a-bank-statement/
     /// - Parameters:
     ///   - documentId:  ID of document to retreive
     ///   - completion: Block executed after request.

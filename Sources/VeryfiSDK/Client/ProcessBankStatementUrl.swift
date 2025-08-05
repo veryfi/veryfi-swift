@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload bank statement to Veryfi API with URL.
+    /// https://docs.veryfi.com/api/bank-statements/process-a-bank-statement/
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.

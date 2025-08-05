@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Delete all line items from document from Veryfi inbox.
+    /// https://docs.veryfi.com/api/receipts-invoices/delete-all-document-line-items/
     /// - Parameters:
     ///   - documentId: ID of document
     ///   - completion: completion description

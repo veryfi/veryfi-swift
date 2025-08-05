@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Delete a check by ID.
+    /// https://docs.veryfi.com/api/checks/delete-a-check/
     /// - Parameters:
     ///   - checkId: The ID of the check to delete.
     ///   - completion: Block executed after request.

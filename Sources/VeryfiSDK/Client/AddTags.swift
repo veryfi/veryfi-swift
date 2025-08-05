@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Add multiple tags in document.
+    /// https://docs.veryfi.com/api/receipts-invoices/add-tags-to-a-document/ 
     /// - Parameters:
     ///   - documentId: ID of document to replace tags.
     ///   - params: Tags data.

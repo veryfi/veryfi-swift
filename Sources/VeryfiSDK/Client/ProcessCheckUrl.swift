@@ -8,6 +8,7 @@ import Foundation
 
 extension Client {
     /// Upload check to Veryfi API with URL.
+    /// https://docs.veryfi.com/api/checks/process-a-check/
     /// - Parameters:
     ///   - fileUrl: Publicly available URL.
     ///   - fileUrls: List of publicly available URLs.
