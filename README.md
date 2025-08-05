@@ -27,13 +27,12 @@ import VeryfiSDK
 class ViewController: UIViewController {
     
     let clientId = "your_client_id"
-    let clientSecret = "your_client_secret"
     let username = "your_username"
     let apiKey = "your_password"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let client = Client(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
+        let client = Client(clientId: clientId, username: username, apiKey: apiKey)
         let file = "receipt"
         let url = Bundle(for: Self.self).url(forResource: file, withExtension: "jpeg")!
         let fileData = try? Data(contentsOf: url)
@@ -57,13 +56,12 @@ import VeryfiSDK
 class ViewController: UIViewController {
     
     let clientId = "your_client_id"
-    let clientSecret = "your_client_secret"
     let username = "your_username"
     let apiKey = "your_password"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let client = Client(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey)
+        let client = Client(clientId: clientId, username: username, apiKey: apiKey)
         let documentId = "your_document_id"
         var parameters = [String : Any]()
         parameters["category"] = "Meals & Entertainment"

@@ -10,7 +10,7 @@ extension VeryfiSDKTests {
         let expectationDelete = XCTestExpectation(description: "Get a JSON response from deleted document")
 
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "deleteDocumentLineItems")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "deleteDocumentLineItems")
             let documentId = 63480993
             expectationDocuments.fulfill()
             client.deleteDocumentLineItems(documentId: String(documentId), withCompletion: { result in

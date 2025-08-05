@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testAddLineItem() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "addLineItem")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "addLineItem")
         }
 
         let expectation = XCTestExpectation(description: "Add line item to document")

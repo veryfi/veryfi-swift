@@ -1,0 +1,14 @@
+{
+  "id": 123456,
+  "document_type": "check",
+  "confidence": 0.95,
+  "vendor": {
+    "name": "Bank of America",
+    "confidence": 0.98
+  },
+  "total": 500.00,
+  "date": "2024-01-15",
+  "category": "Financial",
+  "check_number": "1234",
+  "account_number": "****5678"
+} 

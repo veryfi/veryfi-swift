@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testGetW2s() {
         if (mockResponses) {
-            client = ClientSpy(clientId: clientId, clientSecret: clientSecret, username: username, apiKey: apiKey, resource: "getW2s")
+            client = ClientSpy(clientId: clientId, username: username, apiKey: apiKey, resource: "getW2s")
         }
 
         let expectation = XCTestExpectation(description: "Get all w2 documents in a JSON array")

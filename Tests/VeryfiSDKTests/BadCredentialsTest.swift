@@ -7,7 +7,7 @@ import FoundationNetworking
 extension VeryfiSDKTests {
     func testBadCredentials() {
         let expectation = XCTestExpectation(description: "Get response to a bad credential case")
-        let badClient = Client(clientId: "badClientId", clientSecret: "badClientSecret", username: "badUsername", apiKey: "badApiKey")
+        let badClient = Client(clientId: "badClientId", username: "badUsername", apiKey: "badApiKey")
         badClient.getDocuments(withCompletion: { result in
             switch result{
             case .success(let data):
