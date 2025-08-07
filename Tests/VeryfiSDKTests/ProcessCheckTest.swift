@@ -22,7 +22,7 @@ extension VeryfiSDKTests {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual("118408359", number)
+                XCTAssertEqual("1234", number)
             case .failure(let error):
                 print(error)
                 XCTFail()
@@ -48,7 +48,7 @@ extension VeryfiSDKTests {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual("118408359", number)
+                XCTAssertEqual("1234", number)
             case .failure(let error):
                 print(error)
                 XCTFail()

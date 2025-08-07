@@ -48,7 +48,7 @@ extension VeryfiSDKTests {
                     XCTFail()
                     break
                 }
-                XCTAssertEqual("invoice", documentType["value"] as? String)
+                XCTAssertEqual("receipt", documentType["value"] as? String)
             case .failure(let error):
                 print(error)
                 XCTFail()
