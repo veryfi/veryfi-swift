@@ -15,6 +15,7 @@ let w2Url = "https://cdn.veryfi.com/wp-content/uploads/image.png"
 let splitUrl = "https://cdn.veryfi.com/receipts/92233902-c94a-491d-a4f9-0d61f9407cd2.pdf"
 let classifyUrl = "https://cdn.veryfi.com/receipts/92233902-c94a-491d-a4f9-0d61f9407cd2.pdf"
 let checkUrl = "https://cdn-dev.veryfi.com/testing/veryfi-python/check.pdf"
+let contractUrl = "https://drive.usercontent.google.com/u/0/uc?id=1qaemYWc_PkO21HKKw8kQSIU0sCUR-_wN&export=download"
 var client = Client(clientId: clientId, username: username, apiKey: apiKey)
 let mockResponses = true
 

@@ -33,6 +33,7 @@ let package = Package(
                 .copy("Resources/w2.png"),
                 .copy("Resources/split.pdf"),
                 .copy("Resources/check.pdf"),
+                .copy("Resources/contract.pdf"),
                 .copy("Resources/deleteDocument.json"),
                 .copy("Resources/getDocument.json"),
                 .copy("Resources/getDocuments.json"),
@@ -63,7 +64,12 @@ let package = Package(
                 .copy("Resources/processCheck.json"),
                 .copy("Resources/getCheck.json"),
                 .copy("Resources/getChecks.json"),
-                .copy("Resources/deleteCheck.json")
+                .copy("Resources/deleteCheck.json"),
+                .copy("Resources/processContract.json"),
+                .copy("Resources/getContract.json"),
+                .copy("Resources/getContracts.json"),
+                .copy("Resources/updateContract.json"),
+                .copy("Resources/deleteContract.json")
             ]
         )
     ]

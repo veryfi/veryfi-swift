@@ -26,6 +26,7 @@ enum Endpoint: String {
     case classify = "/partner/classify/"
     case split = "/partner/documents-set/"
     case checks = "/partner/checks/"
+    case contracts = "/partner/contracts/"
 }
 
 public class NetworkManager {

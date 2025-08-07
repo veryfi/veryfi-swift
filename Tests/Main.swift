@@ -46,7 +46,13 @@ extension VeryfiSDKTests {
             ("testProcessCheckURL", testProcessCheckURL),
             ("testGetCheck", testGetCheck),
             ("testGetChecks", testGetChecks),
-            ("testDeleteCheck", testDeleteCheck)
+            ("testDeleteCheck", testDeleteCheck),
+            ("testProcessContract", testProcessContract),
+            ("testProcessContractURL", testProcessContractURL),
+            ("testGetContracts", testGetContracts),
+            ("testGetContract", testGetContract),
+            ("testDeleteContract", testDeleteContract),
+            ("testUpdateContract", testUpdateContract)
         ]
     }
 }
