@@ -15,6 +15,7 @@ extension Client {
     ///     - categories: List of document categories.
     ///     - deleteAfterProcessing: Do not store file in Veryfi's inbox.
     ///     - params: Additional parameters.
+    ///     - thinking: Extra LLM pass on the line items: `.light` or `.deep` (slower). Pass `nil` to turn it off. Needs thinking mode enabled for your account.
     ///     - completion: Function called after request completes.
     ///     -  detail: Response from server.
     ///     -  error: Error from server.
@@ -23,6 +24,7 @@ extension Client {
                                 categories: [String]? = nil,
                                 deleteAfterProcessing: Bool = false,
                                 params: [String: Any]? = nil,
+                                thinking: ThinkingMode? = nil,
                                 withCompletion completion: @escaping (Result<Data, APIError>) -> Void) {
         let requestCats = categories ?? []
         var requestParams = params ?? [String: Any]()
@@ -30,6 +32,9 @@ extension Client {
         requestParams["auto_delete"] = deleteAfterProcessing
         requestParams["file_data"] = fileData.base64EncodedString()
         requestParams["file_name"] = fileName
+        if let thinking = thinking {
+            requestParams["thinking"] = thinking.rawValue
+        }
 
         guard let jsonData = try? JSONSerialization.data(withJSONObject: requestParams, options: .prettyPrinted) else {
             completion(.failure(.parsingError))

@@ -48,6 +48,14 @@ class ViewController: UIViewController {
 }
 ```
 
+Run thinking on the line items with `thinking` (`.light` or `.deep`; leave it `nil` to turn it off). `processDocument` and `processDocumentURL` accept it, and `.deep` takes longer than `.light`. It only takes effect if thinking mode is enabled for your account.
+
+```swift
+client.processDocument(fileName: file, fileData: fileData!, thinking: .light) { result in
+    // ...
+}
+```
+
 #### Update a document
 ```swift
 import UIKit
